@@ -1,0 +1,586 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:host {
+  --primary: #ff5722;
+  --primary-glow: rgba(255, 87, 34, 0.4);
+  --bg-dark: #0a0a0c;
+  --bg-card: rgba(20, 20, 25, 0.65);
+  --text-white: #ffffff;
+  --text-muted: #a0a0ab;
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  display: block;
+  background-color: var(--bg-dark);
+  color: var(--text-white);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Background Gradients & Grid */
+.scroll-container {
+  position: relative;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 87, 34, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(255, 235, 59, 0.05) 0%, transparent 40%);
+}
+
+.scroll-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Fixed 3D Pizza Canvas overlay container */
+.pizza-viewport {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  /* Positioned behind text overlays but above general section background */
+  pointer-events: none;
+  /* Let clicks pass through */
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1.25rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  background: rgba(10, 10, 12, 0.7);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.5px;
+  color: var(--text-white);
+}
+
+.logo-accent {
+  color: var(--primary);
+  text-shadow: 0 0 12px var(--primary-glow);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--text-white);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.cart-btn {
+  position: relative;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+.cart-btn:hover {
+  color: var(--text-white);
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--primary);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* General Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  border: none;
+}
+
+.btn-lg {
+  padding: 1rem 2.25rem;
+  font-size: 1.05rem;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--primary-glow);
+  background: #ff6d3f;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-white);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 87, 34, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(255, 87, 34, 0.2);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+}
+
+/* Sections Base */
+.section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 120px 8%;
+  position: relative;
+}
+
+.section-content {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+}
+
+/* Headings & Text */
+h1 {
+  font-family: var(--font-heading);
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: -2px;
+}
+
+h2 {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: -1.5px;
+}
+
+h3 {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  margin: 0 0 0.5rem 0;
+}
+
+h4 {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  margin: 0 0 0.25rem 0;
+  font-weight: 700;
+}
+
+p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #ff5722 0%, #ffeb3b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Spacers for 3D Pizza Canvas */
+.hero-visual-spacer,
+.craft-visual-spacer,
+.ingredients-visual-spacer {
+  height: 500px;
+  pointer-events: none;
+  /* Clickable elements below it should be usable */
+}
+
+/* Hero Section */
+.hero-text {
+  max-width: 550px;
+  position: relative;
+  z-index: 5;
+}
+
+.cta-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3.5rem;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 2rem;
+}
+
+.stat h3 {
+  color: var(--text-white);
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.stat p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Craft Section */
+.craft-text {
+  max-width: 550px;
+  position: relative;
+  z-index: 5;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.features-list li {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+.features-list .icon {
+  font-size: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.6rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.features-list h4 {
+  margin: 0 0 0.25rem 0;
+  color: var(--text-white);
+}
+
+.features-list p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Ingredients Section */
+.ingredients-text {
+  max-width: 550px;
+  position: relative;
+  z-index: 5;
+}
+
+.ingredients-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.ing-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 3px solid var(--border-color, var(--primary));
+  padding: 1.25rem;
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.ing-card:hover {
+  transform: translateY(-3px);
+  background: rgba(25, 25, 30, 0.8);
+}
+
+.ing-card h4 {
+  color: var(--text-white);
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.ing-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Order Section & Delivery Box Graphic */
+.order-layout {
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 4rem;
+
+}
+
+.order-form-container {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 3rem;
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+}
+
+.checkout-form {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-white);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.9rem 1.25rem;
+  border-radius: 30px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--primary);
+}
+
+.size-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.size-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  padding: 0.75rem;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.size-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.size-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.price-label {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.price-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  color: var(--text-white);
+}
+
+/* Pizza Delivery Box Graphic (Behind Pizza on Last Slide) */
+.order-graphic-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  position: relative;
+}
+
+.pizza-delivery-box {
+  width: 440px;
+  height: 440px;
+  background: linear-gradient(145deg, #1e1b19 0%, #12100f 100%);
+  border: 2px solid #2e2825;
+  border-radius: 16px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.pizza-delivery-box::before {
+  content: 'HOT & FRESH';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: #ff5722;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  opacity: 0.4;
+}
+
+.pizza-delivery-box::after {
+  content: 'SLICECRAFT';
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  color: white;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  opacity: 0.2;
+}
+
+.box-spacer {
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 87, 34, 0.15);
+}
+
+.box-shadow-ring {
+  position: absolute;
+  width: 330px;
+  height: 330px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, transparent 75%);
+  pointer-events: none;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  h2 {
+    font-size: 2.8rem;
+  }
+
+  .section-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .hero-visual-spacer,
+  .craft-visual-spacer,
+  .ingredients-visual-spacer {
+    display: none;
+    /* Hide 3D spacer slots on mobile and rely on background positioning */
+  }
+
+  .navbar {
+    padding: 1rem 5%;
+  }
+
+  .nav-links {
+    display: none;
+    /* Mobile menu collapsed for simplicity */
+  }
+}

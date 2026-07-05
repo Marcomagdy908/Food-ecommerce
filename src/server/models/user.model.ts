@@ -1,0 +1,17 @@
+import { Schema, model, models } from 'mongoose';
+
+const AddressSchema = new Schema({
+  label: { type: String, required: true }, // Home, Work, etc.
+  street: { type: String, required: true },
+  city: { type: String, required: true },
+  coordinates: { type: [Number], default: [0, 0] } // [longitude, latitude]
+});
+
+const UserSchema = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true, index: true },
+  passwordHash: { type: String, required: true },
+  savedAddresses: [AddressSchema]
+}, { timestamps: true });
+
+export const User = models['User'] || model('User', UserSchema);
