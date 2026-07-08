@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, OnDestroy, ViewChild, AfterViewInit, Hos
 import { isPlatformBrowser } from '@angular/common';
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import { PizzaStateService } from '../../services/pizza-state.service';
 
 @Component({
   selector: 'app-pizza-canvas',
@@ -46,6 +47,7 @@ export class PizzaCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
   public onReadyCallback?: () => void;
 
   private platformId = inject(PLATFORM_ID);
+  private pizzaState = inject(PizzaStateService);
 
   constructor() { }
 
@@ -56,10 +58,12 @@ export class PizzaCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
       this.initThree();
       this.loadModelAndSetup();
       this.animate();
+      this.pizzaState.registerCanvas(this);
     }
   }
 
   ngOnDestroy() {
+    this.pizzaState.unregisterCanvas();
     if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
     if (this.renderer) this.renderer.dispose();
     if (this.scene) {
@@ -397,8 +401,10 @@ export class PizzaCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    if (this.isIdle && this.pizzaGroup && !this.inBox) {
-      this.pizzaGroup.position.y = Math.sin(time * 1.2) * 0.1;
+    if (this.isIdle && this.pizzaModelGroup && !this.inBox) {
+      this.pizzaModelGroup.position.y = Math.sin(time * 1.2) * 0.1;
+    } else if (this.pizzaModelGroup) {
+      this.pizzaModelGroup.position.y = 0;
     }
 
     this.renderer.render(this.scene, this.camera);

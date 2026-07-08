@@ -1,0 +1,127 @@
+<div class="profile-page-container">
+  <!-- Profile Header -->
+  <section class="profile-header-section animate-fade-in">
+    <div class="avatar-wrapper">
+      <div class="avatar-ring">
+        <img class="avatar-image" [src]="user.avatar" [alt]="user.name" />
+      </div>
+      <button class="edit-avatar-btn" aria-label="Edit Profile Picture">
+        <i class="fa-solid fa-pencil"></i>
+      </button>
+    </div>
+    <div class="user-details text-center md:text-left">
+      <h1 class="user-name text-primary">{{ user.name }}</h1>
+      <p class="user-email">{{ user.email }}</p>
+      <div class="badge-row">
+        <span class="member-status-badge">{{ user.memberStatus }}</span>
+        <span class="joined-date-badge">{{ user.joinedDate }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento Grid Layout -->
+  <div class="profile-bento-grid">
+    <!-- Left Column: Address list & settings links -->
+    <div class="bento-col-left">
+      <!-- Saved Addresses Card -->
+      <div class="bento-card saved-addresses-card">
+        <div class="card-title-row">
+          <i class="fa-solid fa-location-dot icon-secondary"></i>
+          <h2 class="card-title text-primary">Saved Addresses</h2>
+        </div>
+        <div class="addresses-list-group">
+          @for (addr of user.addresses; track addr.type) {
+            <div class="address-item-group">
+              <p class="address-type-label text-secondary">{{ addr.type }}</p>
+              <p class="address-text">{{ addr.street }}<br>{{ addr.city }}</p>
+            </div>
+          }
+          <button class="add-address-btn">
+            + Add New Address
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings Card -->
+      <div class="bento-card settings-card">
+        <div class="card-title-row">
+          <i class="fa-solid fa-gear icon-secondary"></i>
+          <h2 class="card-title text-primary">Account Settings</h2>
+        </div>
+        <nav class="settings-nav-links">
+          <a class="nav-item hover:bg-surface-variant transition-colors" href="javascript:void(0)">
+            <span class="nav-item-label">Personal Information</span>
+            <i class="fa-solid fa-chevron-right chevron-icon"></i>
+          </a>
+          <a class="nav-item hover:bg-surface-variant transition-colors" href="javascript:void(0)">
+            <span class="nav-item-label">Payment Methods</span>
+            <i class="fa-solid fa-chevron-right chevron-icon"></i>
+          </a>
+          <a class="nav-item hover:bg-surface-variant transition-colors" href="javascript:void(0)">
+            <span class="nav-item-label">Email Notifications</span>
+            <i class="fa-solid fa-chevron-right chevron-icon"></i>
+          </a>
+          <a class="nav-item hover:bg-surface-variant transition-colors" href="javascript:void(0)">
+            <span class="nav-item-label">Privacy & Security</span>
+            <i class="fa-solid fa-chevron-right chevron-icon"></i>
+          </a>
+          <button class="logout-btn" (click)="logout()">
+            Logout
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Right Column: Quick Reorder & Napoli Rewards -->
+    <div class="bento-col-right">
+      <!-- Quick Reorder Card -->
+      <div class="bento-card quick-reorder-card">
+        <div class="card-header-flex mb-8">
+          <div class="card-title-row no-margin">
+            <i class="fa-solid fa-clock-rotate-left icon-secondary"></i>
+            <h2 class="card-title text-primary">Quick Reorder</h2>
+          </div>
+          <a class="view-all-orders-link text-secondary" href="javascript:void(0)">View All Orders</a>
+        </div>
+        
+        <div class="reorder-items-grid">
+          @for (order of recentOrders; track order.title) {
+            <div class="reorder-item-card group">
+              <div class="item-card-image-wrapper">
+                <img class="item-card-image" [src]="order.imageUrl" [alt]="order.title" />
+              </div>
+              <div class="item-card-details">
+                <p class="item-title-label text-secondary">{{ order.title }}</p>
+                <p class="item-desc-text">{{ order.description }}</p>
+                <div class="item-footer-flex">
+                  <span class="item-price-tag text-primary">${{ order.price | number:'1.2-2' }}</span>
+                  <button class="reorder-action-btn" (click)="reorder(order)" aria-label="Reorder now">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Napoli Rewards Card -->
+      <div class="bento-card rewards-card text-on-primary">
+        <div class="rewards-info-col">
+          <h3 class="rewards-title">Napoli Rewards</h3>
+          <p class="rewards-description">You are 150 points away from a free Wood-Fired Appetizer.</p>
+        </div>
+        <div class="rewards-points-panel">
+          <div class="points-counter">
+            <p class="points-number">{{ user.points }}</p>
+            <p class="points-label">Points</p>
+          </div>
+          <div class="rewards-divider"></div>
+          <button class="redeem-rewards-btn">
+            Redeem
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

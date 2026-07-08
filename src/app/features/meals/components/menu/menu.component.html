@@ -1,0 +1,68 @@
+<div class="menu-page-container">
+  <!-- Header matching Stitch styling -->
+  <div class="menu-header animate-fade-in">
+    <span class="badge-benvenuto">Benvenuto</span>
+    <h2>Welcome back, <br><span class="italic font-normal">Authentic flavors await.</span></h2>
+    <p>Our wood-fired oven is roaring. Experience the heritage of Naples with our artisanal pizzas, handcrafted with flour from Molino Caputo and San Marzano tomatoes.</p>
+  </div>
+
+  <!-- Categories Slider matching Stitch -->
+  <section class="categories-slider-section">
+    <div class="slider-header">
+      <h2 class="slider-title">Discover the Menu</h2>
+    </div>
+    <div class="categories-slider-row hide-scrollbar">
+      @for (cat of categories; track cat.name) {
+        <div class="category-card" [class.active]="activeCategory === cat.name" (click)="filterByCategory(cat.name)">
+          <div class="category-image-container">
+            <img class="category-image" [src]="cat.image" [alt]="cat.name" />
+            <div class="category-overlay"></div>
+          </div>
+          <p class="category-label" [class.active-label]="activeCategory === cat.name">{{ cat.name }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Featured Grid matching Stitch -->
+  <section class="artisanal-grid-section">
+    <div class="section-title-group">
+      <h2 class="section-title">Artisanal Selections</h2>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="meals-grid-stitch">
+      @for (meal of filteredMeals; track meal._id) {
+        <div class="meal-card-stitch group">
+          <!-- Card Image Top -->
+          <div class="meal-image-container">
+            <img class="meal-image" [src]="meal.imageUrl" [alt]="meal.title" />
+            @if (meal.tags && meal.tags.length > 0) {
+              <div class="badge-overlay-container">
+                <span class="badge-overlay">{{ meal.tags[0] }}</span>
+              </div>
+            }
+          </div>
+
+          <!-- Card Content Details -->
+          <div class="meal-info-container">
+            <div class="dot-leader-header">
+              <h3 class="meal-title">{{ meal.title }}</h3>
+              <span class="meal-price">${{ meal.price | number:'1.2-2' }}</span>
+            </div>
+            <p class="meal-desc">{{ meal.description }}</p>
+
+            <div class="meal-footer">
+              <div class="tags-col">
+                <span class="tag-badge">{{ meal.category }}</span>
+              </div>
+              <button class="add-to-order-btn" (click)="addToCart(meal)">
+                Add to Order <i class="fa-solid fa-circle-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+</div>

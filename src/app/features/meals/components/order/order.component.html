@@ -1,0 +1,140 @@
+<div class="order-page-container">
+  <div class="checkout-grid-container animate-fade-in">
+    <!-- Left Column: Shopping Basket -->
+    <div class="basket-col">
+      <h1 class="basket-title text-primary">Your Basket</h1>
+
+      @if (cart.items().length > 0) {
+        <!-- Items List -->
+        <div class="basket-items-list">
+          @for (item of cart.items(); track item.mealId) {
+            <div class="basket-item-row">
+              <div class="basket-item-image-container">
+                <img class="basket-item-image" [src]="item.imageUrl || 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=300&auto=format&fit=crop'" [alt]="item.title" />
+              </div>
+              <div class="basket-item-details">
+                <div class="basket-item-header">
+                  <div>
+                    <h3 class="basket-item-title">{{ item.title }}</h3>
+                    <p class="basket-item-subtitle">Freshly prepared, authentic recipe</p>
+                  </div>
+                  <span class="basket-item-price">${{ item.price | number:'1.2-2' }}</span>
+                </div>
+                
+                <div class="basket-item-actions">
+                  <div class="quantity-control-pill">
+                    <button aria-label="Decrease quantity" type="button" class="qty-btn" (click)="decrementQuantity(item.mealId)">
+                      <i class="fa-solid fa-minus text-xs"></i>
+                    </button>
+                    <span class="qty-val">{{ item.quantity }}</span>
+                    <button aria-label="Increase quantity" type="button" class="qty-btn" (click)="incrementQuantity(item.mealId, item.title, item.price, item.imageUrl)">
+                      <i class="fa-solid fa-plus text-xs"></i>
+                    </button>
+                  </div>
+                  <button class="remove-item-btn" type="button" (click)="removeItem(item.mealId)">
+                    <i class="fa-solid fa-trash-can"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-basket-banner">
+          <i class="fa-solid fa-basket-shopping text-4xl opacity-30 mb-4 block"></i>
+          <p>Your shopping basket is currently empty.</p>
+          <a routerLink="/menu" class="explore-menu-link">Explore Our Menu</a>
+        </div>
+      }
+
+      <!-- Delivery Address Selector -->
+      <div class="address-section">
+        <h2 class="address-section-title">Delivery Address</h2>
+        <div class="address-options-grid">
+          <!-- Home option -->
+          <div class="address-option-card" [class.selected]="selectedAddress() === 'Home'" (click)="selectAddress('Home', 'Via dei Tribunali, 32', 'Napoli')">
+            <input type="radio" name="address" [checked]="selectedAddress() === 'Home'" class="address-radio" />
+            <div class="address-card-info">
+              <span class="address-label">Home Address</span>
+              <span class="address-details">Via dei Tribunali, 32<br>Napoli, 80138</span>
+            </div>
+          </div>
+
+          <!-- Custom Address Option -->
+          <div class="address-option-card" [class.selected]="selectedAddress() === 'Custom'" (click)="selectAddress('Custom', '', 'Napoli')">
+            <input type="radio" name="address" [checked]="selectedAddress() === 'Custom'" class="address-radio" />
+            <div class="address-card-info">
+              <span class="address-label">Custom Address</span>
+              <span class="address-details">Enter a custom delivery address below</span>
+            </div>
+          </div>
+        </div>
+
+        @if (selectedAddress() === 'Custom') {
+          <div class="custom-address-input-wrapper animate-fade-in">
+            <label for="custom-street">Street Address</label>
+            <input type="text" id="custom-street" placeholder="Enter your custom delivery address..." [value]="street() === 'Via dei Tribunali, 32' ? '' : street()" (input)="updateStreet($event)" required />
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right Column: Order Summary Sidebar -->
+    <div class="summary-col">
+      <div class="summary-card">
+        <h2 class="summary-title text-primary">Order Summary</h2>
+
+        <!-- Promo Code -->
+        <div class="promo-wrapper">
+          <label class="promo-label">Promo Code</label>
+          <div class="promo-input-row">
+            <input type="text" placeholder="Enter code" class="promo-input" />
+            <button type="button" class="promo-apply-btn">Apply</button>
+          </div>
+        </div>
+
+        <!-- Breakdown Row Lines -->
+        <div class="summary-breakdown-group">
+          <div class="summary-leader-row">
+            <span class="lead-label">Subtotal</span>
+            <span class="lead-val">${{ cart.totalPrice() | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-leader-row">
+            <span class="lead-label">Tax (8%)</span>
+            <span class="lead-val">${{ taxAmount | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-leader-row">
+            <span class="lead-label">Delivery Fee</span>
+            <span class="lead-val">${{ deliveryFee | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <!-- Grand Total -->
+        <div class="summary-grand-total-row">
+          <span class="total-label text-primary">Total</span>
+          <span class="total-val text-secondary">${{ grandTotal | number:'1.2-2' }}</span>
+        </div>
+
+        <!-- Submit Form Action -->
+        <form (submit)="submitOrder($event)">
+          @if (orderSuccess()) {
+            <div class="order-success-banner">
+              <i class="fa-solid fa-circle-check text-lg"></i>
+              <span>{{ orderSuccess() }}</span>
+            </div>
+          } @else {
+            <button type="submit" class="place-order-cta-btn" [disabled]="cart.items().length === 0">
+              Place Order <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          }
+        </form>
+
+        <!-- Trust Security Indicators -->
+        <div class="security-trust-badge">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Secure Checkout</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

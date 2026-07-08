@@ -1,0 +1,148 @@
+<!-- Floating 3D Pizza Canvas overlay (Home page only) -->
+<div class="pizza-viewport">
+  <app-pizza-canvas></app-pizza-canvas>
+</div>
+
+<div class="scroll-container">
+
+  <!-- SECTION 1: Hero -->
+  <section id="hero" class="section hero-section">
+    <div class="section-content">
+      <div class="hero-text">
+        <div class="hero-title-group">
+          <span class="badge"><i class="fa-solid fa-location-dot"></i> NAPLES · BORN &amp; BRED</span>
+          <h1>We Speak <br><span class="gradient-text">The Language</span> <br>Of Pizza</h1>
+        </div>
+        <p class="hero-desc">
+          Every slice tells a story. Ours begins in the hills of Campania — where heirloom wheat meets
+          roaring oak fire, and tradition becomes obsession.
+        </p>
+        <div class="hero-cta-group">
+          <div class="cta-group">
+            <a routerLink="/menu" class="btn btn-primary btn-lg">Explore Our Menu</a>
+            <a routerLink="/order" class="btn btn-secondary btn-lg">Order Now</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <h3>4.9<i class="fa-solid fa-star stat-star"></i></h3>
+              <p>14,000+ Reviews</p>
+            </div>
+            <div class="stat">
+              <h3>12 <span class="stat-unit">min</span></h3>
+              <p>Average Delivery</p>
+            </div>
+            <div class="stat">
+              <h3>100<span class="stat-unit">%</span></h3>
+              <p>Certified Organic</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Right side is reserved for the 3D spinning Pizza canvas -->
+      <div class="hero-visual-spacer"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: Our Craft -->
+  <section id="craft" class="section craft-section">
+    <div class="section-content">
+      <!-- Left side is reserved for tilted 3D Pizza -->
+      <div class="craft-visual-spacer"></div>
+
+      <div class="craft-text">
+        <div class="craft-title-group">
+          <span class="badge"><i class="fa-solid fa-fire"></i> THE ART OF THE OVEN</span>
+          <h2>Experience<br>the World First.</h2>
+        </div>
+        <p class="craft-desc">
+          Our dome reaches 485°C. Your pizza bakes in 90 seconds flat —
+          with a leopard-spotted crust that only true Neapolitan fire can create.
+        </p>
+        <ul class="features-list">
+          <li>
+            <div class="icon"><i class="fa-solid fa-wheat-awn"></i></div>
+            <div>
+              <h4>Heirloom Wheat</h4>
+              <p>Stone-milled from Molino Caputo, fermented cold for 72 hours for unmatched depth of flavour.</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
+            <div>
+              <h4>Oakwood Fire</h4>
+              <p>Baked at 485°C for exactly 90 seconds — the Neapolitan standard, perfected in our dome oven.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: Brand Promise & Ingredients Cards -->
+  <section id="ingredients" class="section ingredients-section">
+    <div class="ingredients-marquee">
+      <span>ORGANIC • WOOD-FIRED • HAND-STRETCHED • FRESH HARVEST • ZERO-KM • FAST DELIVERY • ORGANIC • WOOD-FIRED • HAND-STRETCHED • FRESH HARVEST • ZERO-KM • FAST DELIVERY • </span>
+    </div>
+    <div class="section-content">
+      <div class="ingredients-text">
+        <div class="ingredients-title-group">
+          <span class="badge"><i class="fa-solid fa-leaf"></i> OUR PILLARS</span>
+          <h2>Crafted with<br>Purpose &amp; Pride.</h2>
+        </div>
+        <p class="ingredients-desc">
+          Six non-negotiable commitments that live in every pie we pull from the oven —
+          no shortcuts, no compromises.
+        </p>
+
+      </div>
+      <!-- Right side is reserved for the zoomed-in rotated Pizza -->
+      <div class="ingredients-visual-spacer"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: Order / CTA -->
+  <section id="order" class="section order-section">
+    <div class="section-content order-layout">
+      <div class="order-form-container">
+        <span class="badge"><i class="fa-solid fa-bag-shopping"></i> ORDER IN 30 SECONDS</span>
+        <h2>Get It Hot.<br>Delivered Now.</h2>
+        <p>Skip the queue. Our gourmet Margherita and Pepperoni Supremo ship straight from the oven to your door.</p>
+
+        <div class="order-cta-block">
+          <div class="order-highlights">
+            <div class="order-highlight-item">
+              <span class="highlight-icon"><i class="fa-regular fa-clock"></i></span>
+              <span>Ready in <strong>12 minutes</strong></span>
+            </div>
+            <div class="order-highlight-item">
+              <span class="highlight-icon"><i class="fa-solid fa-credit-card"></i></span>
+              <span>Secure <strong>one-click checkout</strong></span>
+            </div>
+            <div class="order-highlight-item">
+              <span class="highlight-icon"><i class="fa-solid fa-recycle"></i></span>
+              <span><strong>Eco-friendly</strong> packaging</span>
+            </div>
+          </div>
+          <div class="order-actions">
+            <a routerLink="/order" class="btn btn-primary btn-lg">
+              Place Your Order <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+            </a>
+            <a routerLink="/menu" class="btn btn-secondary btn-lg" style="text-decoration: none;">
+              Browse Menu
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- The Pizza lands right in the middle of the order graphic area -->
+      <div class="order-graphic-container">
+        <div class="pizza-delivery-box">
+          <div class="box-back"></div>
+          <div class="box-spacer"></div>
+          <div class="box-shadow-ring"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

@@ -1,15 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,500;0,600;1,500&display=swap');
+
+:root {
+  --primary: #283327;
+  --primary-glow: rgba(40, 51, 39, 0.25);
+  --accent: #944925;
+  --accent-glow: rgba(148, 73, 37, 0.3);
+  --bg-dark: #fbfbe2;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --text-white: #1b1d0e;
+  --text-muted: #444842;
+  --font-heading: 'EB Garamond', serif;
+  --font-body: 'Hanken Grotesk', sans-serif;
+}
 
 :host {
-  --primary: #ff5722;
-  --primary-glow: rgba(255, 87, 34, 0.4);
-  --bg-dark: #0a0a0c;
-  --bg-card: rgba(20, 20, 25, 0.65);
-  --text-white: #ffffff;
-  --text-muted: #a0a0ab;
-  --font-heading: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
-
   display: block;
   background-color: var(--bg-dark);
   color: var(--text-white);
@@ -22,10 +26,9 @@
 /* Background Gradients & Grid */
 .scroll-container {
   position: relative;
-  z-index: 2;
   background:
-    radial-gradient(circle at 10% 20%, rgba(255, 87, 34, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(255, 235, 59, 0.05) 0%, transparent 40%);
+    radial-gradient(circle at 10% 20%, rgba(45, 90, 63, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(189, 85, 57, 0.04) 0%, transparent 40%);
 }
 
 .scroll-container::before {
@@ -35,8 +38,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
   background-size: 80px 80px;
   pointer-events: none;
   z-index: -1;
@@ -49,7 +52,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1;
+  z-index: 2;
   /* Positioned behind text overlays but above general section background */
   pointer-events: none;
   /* Let clicks pass through */
@@ -67,9 +70,9 @@
   justify-content: space-between;
   align-items: center;
   z-index: 100;
-  background: rgba(10, 10, 12, 0.7);
+  background: rgba(251, 251, 226, 0.85);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .logo {
@@ -124,13 +127,13 @@
   position: absolute;
   top: -8px;
   right: -8px;
-  background: var(--primary);
+  background: var(--accent);
   color: white;
   font-size: 0.7rem;
   font-weight: 700;
   padding: 2px 6px;
   border-radius: 10px;
-  box-shadow: 0 0 10px var(--primary-glow);
+  box-shadow: 0 0 10px var(--accent-glow);
 }
 
 /* General Buttons */
@@ -162,18 +165,19 @@
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px var(--primary-glow);
-  background: #ff6d3f;
+  background: #396f50;
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.6);
   color: var(--text-white);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(10px);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
 }
 
@@ -186,16 +190,22 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  background: rgba(255, 87, 34, 0.12);
+  gap: 0.5rem;
+  background: rgba(45, 90, 63, 0.08);
   color: var(--primary);
-  border: 1px solid rgba(255, 87, 34, 0.2);
+  border: 1px solid rgba(45, 90, 63, 0.15);
   font-weight: 700;
   font-size: 0.75rem;
   letter-spacing: 1px;
   text-transform: uppercase;
-  padding: 0.4rem 0.8rem;
+  padding: 0.4rem 0.9rem;
   border-radius: 20px;
   margin-bottom: 1.5rem;
+}
+
+.badge i {
+  font-size: 0.7rem;
+  opacity: 0.8;
 }
 
 /* Sections Base */
@@ -206,6 +216,89 @@
   box-sizing: border-box;
   padding: 120px 8%;
   position: relative;
+}
+
+/* Pre-hide all animated sub-elements to prevent flash before GSAP initializes */
+.hero-text .hero-desc,
+.hero-text .cta-group,
+.hero-text .hero-stats,
+.craft-text .badge,
+.craft-text h2,
+.craft-text .craft-desc,
+.craft-text .features-list,
+.ingredients-text .badge,
+.ingredients-text h2,
+.ingredients-text .ingredients-desc,
+.ingredients-text .ingredients-grid,
+.ing-card,
+.order-form-container,
+.order-form-container>*,
+.order-graphic-container {
+  visibility: hidden;
+  opacity: 0;
+}
+
+@media (min-width: 1025px) {
+  .scroll-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 120px 8% 0 8%;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  .section>* {
+    pointer-events: auto;
+  }
+
+  .hero-text,
+  .craft-text,
+  .ingredients-text {
+    position: relative;
+    height: 450px;
+  }
+
+  .hero-text>*,
+  .craft-text>*,
+  .ingredients-text>* {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .ingredients-grid {
+    position: absolute !important;
+    top: 50% !important;
+    left: 0 !important;
+    transform: translateY(-50%) !important;
+    width: 100% !important;
+    height: 180px !important;
+    display: block !important;
+  }
+
+  .ing-card {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+  }
 }
 
 .section-content {
@@ -221,46 +314,54 @@
 /* Headings & Text */
 h1 {
   font-family: var(--font-heading);
-  font-size: 4.5rem;
-  font-weight: 800;
+  font-size: 5.2rem;
+  font-weight: 600;
   line-height: 1.1;
   margin: 0 0 1.5rem 0;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
+  color: var(--text-white);
 }
 
 h2 {
   font-family: var(--font-heading);
-  font-size: 3.5rem;
-  font-weight: 800;
-  line-height: 1.1;
-  margin: 0 0 1.5rem 0;
-  letter-spacing: -1.5px;
+  font-size: 4.2rem;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 1.25rem 0;
+  letter-spacing: -0.5px;
+  color: var(--text-white);
 }
 
 h3 {
   font-family: var(--font-heading);
   font-size: 1.8rem;
+  font-weight: 500;
   margin: 0 0 0.5rem 0;
+  color: var(--text-white);
 }
 
 h4 {
   font-family: var(--font-heading);
-  font-size: 1.15rem;
-  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  margin: 0 0 0.35rem 0;
   font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-white);
 }
 
 p {
   color: var(--text-muted);
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin: 0 0 2rem 0;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  margin: 0 0 1.75rem 0;
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #ff5722 0%, #ffeb3b 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Spacers for 3D Pizza Canvas */
@@ -274,40 +375,72 @@ p {
 
 /* Hero Section */
 .hero-text {
-  max-width: 550px;
+  max-width: 580px;
   position: relative;
   z-index: 5;
+}
+
+.hero-desc {
+  font-size: 1.2rem !important;
+  line-height: 1.75 !important;
+  color: var(--text-muted) !important;
+  max-width: 460px;
 }
 
 .cta-group {
   display: flex;
   gap: 1rem;
-  margin-bottom: 3.5rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
 }
 
 .hero-stats {
   display: flex;
-  gap: 3rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 2rem;
+  gap: 2.5rem;
+  border-top: 1px solid rgba(35, 40, 36, 0.1);
+  padding-top: 1.75rem;
 }
 
 .stat h3 {
+  font-size: 2rem;
   color: var(--text-white);
+  font-weight: 800;
+  margin-bottom: 0.2rem;
+  letter-spacing: -1px;
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+}
+
+.stat-star {
+  font-size: 1.1rem;
+  color: #f5a623;
+}
+
+.stat-unit {
+  font-size: 1.6rem;
   font-weight: 700;
-  margin-bottom: 0.25rem;
 }
 
 .stat p {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   margin: 0;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
 /* Craft Section */
 .craft-text {
-  max-width: 550px;
+  max-width: 580px;
   position: relative;
   z-index: 5;
+}
+
+.craft-desc {
+  font-size: 1.2rem !important;
+  line-height: 1.75 !important;
+  max-width: 460px;
 }
 
 .features-list {
@@ -316,36 +449,85 @@ p {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .features-list li {
   display: flex;
   gap: 1.25rem;
   align-items: flex-start;
+  background: rgba(45, 90, 63, 0.04);
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  border: 1px solid rgba(45, 90, 63, 0.08);
+  transition: background 0.3s ease;
+}
+
+.features-list li:hover {
+  background: rgba(45, 90, 63, 0.08);
 }
 
 .features-list .icon {
-  font-size: 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 0.6rem;
+  font-size: 1rem;
+  color: var(--primary);
+  background: rgba(45, 90, 63, 0.1);
+  width: 42px;
+  height: 42px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(45, 90, 63, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .features-list h4 {
   margin: 0 0 0.25rem 0;
   color: var(--text-white);
+  text-transform: none;
+  font-size: 1.05rem;
+  letter-spacing: 0;
 }
 
 .features-list p {
   margin: 0;
   font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.ingredients-marquee {
+  position: absolute;
+  bottom: 12%;
+  left: 0;
+  width: 100%;
+  overflow:hidden !important;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ingredients-marquee span {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 9vw;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: rgba(45, 90, 63, 0.85);
+  letter-spacing: 6px;
+  overflow: hidden;
 }
 
 /* Ingredients Section */
 .ingredients-text {
-  max-width: 550px;
+  max-width: 580px;
+  position: relative;
+  z-index: 5;
+}
+
+.ingredients-desc {
+  font-size: 1.15rem !important;
+  line-height: 1.7 !important;
+  max-width: 460px;
   position: relative;
   z-index: 5;
 }
@@ -356,50 +538,130 @@ p {
   gap: 1.25rem;
 }
 
+/* On desktop each card fills the grid container absolutely (stacked) */
 .ing-card {
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-left: 3px solid var(--border-color, var(--primary));
-  padding: 1.25rem;
-  border-radius: 12px;
-  backdrop-filter: blur(12px);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(45, 90, 63, 0.1);
+  border-left: 4px solid var(--border-color, var(--primary));
+  padding: 1.75rem 1.5rem;
+  border-radius: 16px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(35, 40, 36, 0.07);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .ing-card:hover {
   transform: translateY(-3px);
-  background: rgba(25, 25, 30, 0.8);
+}
+
+.ing-card-icon {
+  font-size: 1.4rem;
+  color: var(--border-color, var(--primary));
+  width: 44px;
+  height: 44px;
+  background: rgba(45, 90, 63, 0.06);
+  border: 1px solid rgba(45, 90, 63, 0.12);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.6rem;
+  flex-shrink: 0;
 }
 
 .ing-card h4 {
   color: var(--text-white);
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: 1.5px;
 }
 
 .ing-card p {
   margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
 }
 
 /* Order Section & Delivery Box Graphic */
 .order-layout {
   grid-template-columns: 1.2fr 0.8fr;
   gap: 4rem;
-
 }
 
 .order-form-container {
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 3rem;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(45, 90, 63, 0.1);
+  padding: 2.25rem;
   border-radius: 24px;
   backdrop-filter: blur(20px);
   position: relative;
   z-index: 5;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 24px 48px rgba(35, 40, 36, 0.1);
+}
 
+.order-form-container h2 {
+  font-size: 2.6rem;
+  letter-spacing: -1.2px;
+  margin-bottom: 0.75rem;
+  line-height: 1.15;
+}
+
+.order-cta-block {
+  margin-top: 1.5rem;
+}
+
+.order-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+}
+
+.order-highlight-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+.order-highlight-item strong {
+  color: var(--text-white);
+}
+
+.highlight-icon {
+  font-size: 1.1rem;
+  width: 34px;
+  height: 34px;
+  background: rgba(45, 90, 63, 0.08);
+  border: 1px solid rgba(45, 90, 63, 0.12);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.order-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.order-actions .btn {
+  flex: 1;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .order-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
 }
 
 .checkout-form {
@@ -424,18 +686,20 @@ p {
 }
 
 .form-group input {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   padding: 0.9rem 1.25rem;
   border-radius: 30px;
-  color: white;
+  color: var(--text-white);
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .form-group input:focus {
   border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
 .size-selector {
@@ -445,8 +709,8 @@ p {
 }
 
 .size-btn {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   color: var(--text-muted);
   padding: 0.75rem;
   border-radius: 30px;
@@ -456,8 +720,8 @@ p {
 }
 
 .size-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-white);
 }
 
 .size-btn.active {
@@ -488,60 +752,61 @@ p {
   color: var(--text-white);
 }
 
-/* Pizza Delivery Box Graphic (Behind Pizza on Last Slide) */
+/* Order Graphic Container – no z-index so the fixed pizza canvas at z-index 3 sits above it */
 .order-graphic-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 500px;
   position: relative;
+  z-index: 0;
 }
 
 .pizza-delivery-box {
   width: 440px;
   height: 440px;
-  background: linear-gradient(145deg, #1e1b19 0%, #12100f 100%);
-  border: 2px solid #2e2825;
+  background: linear-gradient(145deg, #e3dac9 0%, #d2c5b1 100%);
+  border: 2px solid #bdae98;
   border-radius: 16px;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
 
 .pizza-delivery-box::before {
-  content: 'HOT & FRESH';
+  content: 'WOOD-FIRED & FRESH';
   position: absolute;
   top: 12px;
   left: 12px;
-  color: #ff5722;
+  color: var(--accent);
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 0.75rem;
   letter-spacing: 2px;
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 .pizza-delivery-box::after {
-  content: 'SLICECRAFT';
+  content: 'SLICECRAFT GOURMET';
   position: absolute;
   bottom: 12px;
   right: 12px;
-  color: white;
+  color: var(--primary);
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 0.75rem;
   letter-spacing: 2px;
-  opacity: 0.2;
+  opacity: 0.5;
 }
 
 .box-spacer {
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  border: 2px dashed rgba(255, 87, 34, 0.15);
+  border: 2px dashed rgba(189, 85, 57, 0.25);
 }
 
 .box-shadow-ring {

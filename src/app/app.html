@@ -1,222 +1,26 @@
-<!-- Floating 3D Pizza Canvas overlay -->
-<div class="pizza-viewport">
-  <app-pizza-canvas></app-pizza-canvas>
-</div>
-
-<!-- Main Scroll Container for GSAP ScrollTrigger -->
-<div class="scroll-container">
-
-  <!-- Navigation Header -->
-  <header class="navbar">
-    <div class="logo">
-      <span class="logo-accent">Slice</span>Craft
+<!-- Navigation Header -->
+<header class="navbar">
+  <div class="logo" routerLink="" style="cursor: pointer;">
+    Bella Napoli
+  </div>
+  <nav class="nav-links">
+    <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+    <a routerLink="/menu" routerLinkActive="active">Menu</a>
+    <a routerLink="/order" routerLinkActive="active">Order Online</a>
+    <a routerLink="/profile" routerLinkActive="active">Profile</a>
+  </nav>
+  <div class="nav-actions">
+    <div class="cart-btn" routerLink="/order">
+      <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+        <path
+          d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720h592q20 0 32 14.5t1 33.5L736-392q-16 28-44.5 44T630-332H306L188-580H120v-80h102l24 60Zm80 308h304q19 0 34.5-9.5T688-446l110-200H270l56 226Z" />
+      </svg>
+      <span class="cart-count">{{ cart.totalQuantity() }}</span>
     </div>
-    <nav class="nav-links">
-      <a href="#hero" class="active">Home</a>
-      <a href="#craft">Our Craft</a>
-      <a href="#ingredients">Ingredients</a>
-      <a href="#order">Order Online</a>
-    </nav>
-    <div class="nav-actions">
-      <div class="cart-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path
-            d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720h592q20 0 32 14.5t1 33.5L736-392q-16 28-44.5 44T630-332H306L188-580H120v-80h102l24 60Zm80 308h304q19 0 34.5-9.5T688-446l110-200H270l56 226Z" />
-        </svg>
-        <span class="cart-count">{{ cart.totalQuantity() }}</span>
-      </div>
-      <a href="#order" class="btn btn-primary">Get Your Pizza</a>
-    </div>
-  </header>
+    <a routerLink="/order" class="btn btn-primary">Order Now</a>
+  </div>
+</header>
 
-  <!-- SECTION 1: Hero -->
-  <section id="hero" class="section hero-section">
-    <div class="section-content">
-      <div class="hero-text">
-        <span class="badge">🍕 NEW GENERATION PIZZERIA</span>
-        <h1>We Speak <br><span class="gradient-text">The Language</span> <br>Of Pizza</h1>
-        <p>
-          Experience the world's first interactive 3D word-crafted pizza. Select your topics, customize toppings as
-          words of flavor, and watch them bake live.
-        </p>
-        <div class="cta-group">
-          <a href="#order" class="btn btn-primary btn-lg">Order Now</a>
-          <a href="#ingredients" class="btn btn-secondary btn-lg">Explore Toppings</a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat">
-            <h3>4.9★</h3>
-            <p>12k+ Reviews</p>
-          </div>
-          <div class="stat">
-            <h3>15 Min</h3>
-            <p>Super Fast Delivery</p>
-          </div>
-          <div class="stat">
-            <h3>100%</h3>
-            <p>Fresh & Organic</p>
-          </div>
-        </div>
-      </div>
-      <!-- Right side is reserved for the 3D spinning Pizza canvas -->
-      <div class="hero-visual-spacer"></div>
-    </div>
-  </section>
-
-  <!-- SECTION 2: Our Craft -->
-  <section id="craft" class="section craft-section">
-    <div class="section-content">
-      <!-- Left side is reserved for tilted 3D Pizza -->
-      <div class="craft-visual-spacer"></div>
-
-      <div class="craft-text">
-        <span class="badge">🔥 WOOD-FIRED EXPERTISE</span>
-        <h2>Baked in 3D, <br>Sourced locally.</h2>
-        <p>
-          Every pizza starts with slow-fermented, stone-ground flour, rising for 48 hours to create a crust so light and
-          airy it feels weightless.
-        </p>
-        <ul class="features-list">
-          <li>
-            <div class="icon">🌾</div>
-            <div>
-              <h4>Ancient Grains</h4>
-              <p>Organic, heirloom Italian wheat for an rich aromatic base.</p>
-            </div>
-          </li>
-          <li>
-            <div class="icon">🪵</div>
-            <div>
-              <h4>Oakwood Ember</h4>
-              <p>Baked at 450°C for 90 seconds to bubble up that perfect leopard crust.</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 3: Brand Promise & Topics -->
-  <section id="ingredients" class="section ingredients-section">
-    <div class="section-content">
-      <div class="ingredients-text">
-        <span class="badge">🌿 BRAND PROMISE</span>
-        <h2>Crafted with <br>Purpose & Pride.</h2>
-        <p>
-          We believe in raising the bar for every single slice. Scroll to see the core pillars that define our slice
-          craftsmanship.
-        </p>
-
-        <div class="ingredients-grid">
-          <div class="ing-card" style="--border-color: #ff3333;">
-            <h4>WOOD-FIRED</h4>
-            <p>Traditional oak wood oven baked at 450°C for perfect leopard crust.</p>
-          </div>
-          <div class="ing-card" style="--border-color: #d7ccc8;">
-            <h4>100% ORGANIC</h4>
-            <p>Handpicked ingredients sourced from bio-certified local farms.</p>
-          </div>
-          <div class="ing-card" style="--border-color: #4caf50;">
-            <h4>FRESHLY PICKED</h4>
-            <p>Aromatic herbs and sweet basil grown fresh in our greenhouse gardens.</p>
-          </div>
-          <div class="ing-card" style="--border-color: #ff7700;">
-            <h4>ARTISANAL DOUGH</h4>
-            <p>48-hour slow cold fermentation for maximum lightness and digestability.</p>
-          </div>
-          <div class="ing-card" style="--border-color: #b0bec5;">
-            <h4>LOCAL SOURCE</h4>
-            <p>Supporting our community farmers for zero-kilometer freshness.</p>
-          </div>
-          <div class="ing-card" style="--border-color: #00e676;">
-            <h4>EXPRESS DELIVERY</h4>
-            <p>Hot, fresh, and straight to your table in under 15 minutes.</p>
-          </div>
-        </div>
-      </div>
-      <!-- Right side is reserved for the zoomed-in rotated Pizza highlighting the labels -->
-      <div class="ingredients-visual-spacer"></div>
-    </div>
-  </section>
-
-  <!-- SECTION 4: Order / Footer -->
-  <section id="order" class="section order-section">
-    <div class="section-content order-layout">
-      <div class="order-form-container">
-        <span class="badge">🛒 SECURE CHECKOUT</span>
-        <h2>Get it hot. Delivered now.</h2>
-        <p>Order this 3D-featured Margherita & Pepperoni masterclass right to your door.</p>
-
-        <form class="checkout-form" (submit)="placeOrder($event)">
-          <div class="form-group">
-            <label>Select Your SliceCraft Pizzas</label>
-            <div class="menu-list-container" style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px;">
-              @for (meal of meals(); track meal._id) {
-                <div class="menu-item-row" style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                  <div class="menu-item-info" style="flex: 1; text-align: left;">
-                    <div style="font-weight: 600; color: #fff; font-size: 0.95rem;">{{ meal.title }}</div>
-                    <div style="color: #ff7700; font-weight: 500; font-size: 0.9rem; margin-top: 2px;">${{ meal.price }}</div>
-                    <div style="font-size: 0.75rem; color: #aaa; margin-top: 4px; line-height: 1.3;">{{ meal.description }}</div>
-                  </div>
-                  <div class="menu-item-actions" style="margin-left: 15px;">
-                    <button type="button" class="btn btn-primary btn-sm" style="padding: 6px 12px; font-size: 0.8rem;" (click)="addToCart(meal)">Add</button>
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
-
-          <!-- Display Cart Details -->
-          @if (cart.items().length > 0) {
-            <div class="cart-items-summary" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; text-align: left;">
-              <label style="color: #ff7700; font-weight: 600; font-size: 0.9rem;">Your Order Summary</label>
-              <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                @for (item of cart.items(); track item.mealId) {
-                  <div class="cart-summary-row" style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #eee;">
-                    <span>{{ item.title }} <span style="color: #ff7700; font-weight: 600;">x{{ item.quantity }}</span></span>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <span>${{ (item.price * item.quantity) | number:'1.2-2' }}</span>
-                      <button type="button" class="btn-remove" style="background: none; border: none; color: #ff3333; cursor: pointer; font-size: 0.8rem; font-weight: 500; padding: 2px 5px;" (click)="removeFromCart(item.mealId)">Remove</button>
-                    </div>
-                  </div>
-                }
-              </div>
-            </div>
-          }
-
-          <div class="form-group" style="margin-top: 20px; text-align: left;">
-            <label for="street">Delivery Address</label>
-            <input type="text" id="street" placeholder="Enter your street address..." [value]="street()" (input)="updateStreet($event)" required style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; margin-top: 5px;">
-          </div>
-          <div class="price-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-            <span class="price-label" style="font-size: 1.1rem; font-weight: 500; color: #aaa;">Total Price</span>
-            <span class="price-value" style="font-size: 1.6rem; font-weight: 700; color: #ff7700;">${{ cart.totalPrice() | number:'1.2-2' }}</span>
-          </div>
-
-          @if (orderSuccess()) {
-            <div class="success-banner" style="background: rgba(76, 175, 80, 0.15); border: 1px solid #4caf50; color: #4caf50; padding: 12px; border-radius: 8px; text-align: center; margin-top: 15px; font-weight: 600; font-size: 0.95rem;">
-              {{ orderSuccess() }}
-            </div>
-          } @else {
-            <button class="btn btn-primary btn-block btn-lg" type="submit" style="width: 100%; margin-top: 15px;">
-              Place Instant Order
-            </button>
-          }
-        </form>
-      </div>
-
-      <!-- The Pizza lands right in the middle of the order graphic area -->
-      <div class="order-graphic-container">
-        <div class="pizza-delivery-box">
-          <div class="box-back"></div>
-          <!-- Space where Pizza fits -->
-          <div class="box-spacer"></div>
-          <div class="box-shadow-ring"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<router-outlet />
+<main class="main-content-area">
+  <router-outlet />
+</main>

@@ -7,7 +7,6 @@ import {
 import express from 'express';
 import { join } from 'node:path';
 import { connectDB } from './server/config/db';
-import { seedMeals } from './server/controllers/meal.controller';
 import apiRouter from './server/routes/api.routes';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
@@ -15,10 +14,8 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const app = express();
 app.use(express.json());
 
-// Connect to database and seed default values
-connectDB().then(() => {
-  seedMeals();
-});
+// Connect to database
+connectDB();
 
 // Mount modular backend REST API endpoints
 app.use('/api/v1', apiRouter);

@@ -5,6 +5,7 @@ export interface CartItem {
   title: string;
   price: number;
   quantity: number;
+  imageUrl?: string;
 }
 
 @Injectable({
@@ -24,7 +25,7 @@ export class CartStateService {
     this._items().reduce((acc, item) => acc + (item.price * item.quantity), 0)
   );
 
-  public addMeal(mealId: string, title: string, price: number): void {
+  public addMeal(mealId: string, title: string, price: number, imageUrl?: string): void {
     this._items.update((currentItems) => {
       const existingIndex = currentItems.findIndex(item => item.mealId === mealId);
       if (existingIndex > -1) {
@@ -35,7 +36,7 @@ export class CartStateService {
         };
         return updated;
       }
-      return [...currentItems, { mealId, title, price, quantity: 1 }];
+      return [...currentItems, { mealId, title, price, quantity: 1, imageUrl }];
     });
   }
 
@@ -52,6 +53,10 @@ export class CartStateService {
         item.mealId === mealId ? { ...item, quantity: item.quantity - 1 } : item
       );
     });
+  }
+
+  public removeItemCompletely(mealId: string): void {
+    this._items.update((currentItems) => currentItems.filter(item => item.mealId !== mealId));
   }
 
   public clearCart(): void {

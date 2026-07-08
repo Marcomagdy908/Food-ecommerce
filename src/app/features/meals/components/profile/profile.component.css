@@ -1,0 +1,519 @@
+.profile-page-container {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 130px 8% 80px 8%;
+  background-color: #fbfbe2;
+  color: #1b1d0e;
+  font-family: 'Hanken Grotesk', sans-serif;
+}
+
+/* Profile Header */
+.profile-header-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.avatar-wrapper {
+  position: relative;
+}
+
+.avatar-ring {
+  width: 192px;
+  height: 192px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(40, 51, 39, 0.2); /* primary border */
+  padding: 4px;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.edit-avatar-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: #944925; /* secondary */
+  color: #ffffff;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.edit-avatar-btn:hover {
+  transform: scale(1.05);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-family: 'EB Garamond', serif;
+  font-size: 3.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.user-email {
+  font-size: 1.15rem;
+  color: #444842; /* on-surface-variant */
+  margin: 0;
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.member-status-badge {
+  background-color: #e5e4c4; /* tertiary-fixed */
+  color: #31321c; /* tertiary */
+  padding: 0.25rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(116, 120, 114, 0.1);
+}
+
+.joined-date-badge {
+  background-color: #e4e4cc; /* surface-container-highest */
+  color: #444842;
+  padding: 0.25rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(116, 120, 114, 0.1);
+}
+
+/* Bento Layout Grid */
+.profile-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2.5rem;
+  width: 100%;
+}
+
+.bento-col-left {
+  grid-column: span 4 / span 4;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.bento-col-right {
+  grid-column: span 8 / span 8;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* Bento Card Base */
+.bento-card {
+  background-color: #f5f5dc; /* surface-container-low */
+  border: 1px solid rgba(116, 120, 114, 0.15); /* border-outline/15 */
+  border-radius: 8px;
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+.bento-card:hover {
+  transform: translateY(-4px);
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-title-row.no-margin {
+  margin-bottom: 0;
+}
+
+.icon-secondary {
+  font-size: 1.5rem;
+  color: #944925; /* secondary */
+}
+
+.card-title {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Saved Addresses */
+.addresses-list-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.address-item-group {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(116, 120, 114, 0.1);
+}
+
+.address-item-group:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0.5rem;
+}
+
+.address-type-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.25rem 0;
+}
+
+.address-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #1b1d0e;
+  margin: 0;
+}
+
+.add-address-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: transparent;
+  border: 1px dashed rgba(116, 120, 114, 0.3);
+  border-radius: 4px;
+  color: #444842;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-address-btn:hover {
+  background-color: #e4e4cc; /* surface-variant */
+}
+
+/* Account Settings Nav Links */
+.settings-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+  background-color: #e4e4cc; /* surface-variant */
+}
+
+.nav-item-label {
+  font-size: 0.95rem;
+  color: #1b1d0e;
+}
+
+.chevron-icon {
+  font-size: 0.85rem;
+  color: #444842;
+  transition: transform 0.2s;
+}
+
+.nav-item:hover .chevron-icon {
+  transform: translateX(3px);
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #ba1a1a; /* error */
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  text-align: left;
+  cursor: pointer;
+  padding: 0.75rem 0.5rem 0.5rem 0.5rem;
+  margin-top: 1rem;
+}
+
+.logout-btn:hover {
+  text-decoration: underline;
+}
+
+/* Quick Reorder */
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.view-all-orders-link {
+  color: #944925 !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.view-all-orders-link:hover {
+  color: #ab552d !important;
+  text-decoration: underline;
+}
+
+.reorder-items-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.reorder-item-card {
+  border: 1px solid rgba(116, 120, 114, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff; /* lowest surface container */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.item-card-image-wrapper {
+  height: 160px;
+  overflow: hidden;
+  position: relative;
+}
+
+.item-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.reorder-item-card:hover .item-card-image {
+  transform: scale(1.05);
+}
+
+.item-card-details {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.item-title-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.25rem 0;
+}
+
+.item-desc-text {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #444842;
+  margin: 0 0 1rem 0;
+  flex-grow: 1;
+}
+
+.item-footer-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(116, 120, 114, 0.05);
+  padding-top: 0.75rem;
+}
+
+.item-price-tag {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.reorder-action-btn {
+  background-color: #283327;
+  color: #ffffff;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.reorder-action-btn:hover {
+  background-color: #944925;
+}
+
+.reorder-action-btn:active {
+  transform: scale(0.9);
+}
+
+.reorder-action-btn i {
+  font-size: 0.85rem;
+}
+
+/* Rewards Card */
+.rewards-card {
+  background-color: #283327; /* primary container */
+  color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.rewards-info-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.rewards-title {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  color: #ffffff !important;
+}
+
+.rewards-description {
+  font-size: 0.95rem;
+  color: #acb9a8 !important;
+  margin: 0;
+}
+
+.rewards-points-panel {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-shrink: 0;
+}
+
+.points-counter {
+  text-align: center;
+}
+
+.points-number {
+  font-family: 'EB Garamond', serif;
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1;
+  color: #ffffff !important;
+}
+
+.points-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0.9;
+  margin: 0.25rem 0 0 0;
+  color: #acb9a8 !important;
+}
+
+.rewards-divider {
+  width: 1px;
+  height: 48px;
+  background-color: rgba(172, 185, 168, 0.3);
+}
+
+.redeem-rewards-btn {
+  background-color: #944925; /* secondary accent */
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.redeem-rewards-btn:hover {
+  background-color: #ab552d;
+  transform: scale(1.03);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .profile-page-container {
+    padding: 100px 6% 60px 6%;
+  }
+
+  .profile-bento-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .bento-col-left, .bento-col-right {
+    grid-column: span 12 / span 12;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-header-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .user-name {
+    font-size: 2.75rem;
+  }
+
+  .badge-row {
+    justify-content: center;
+  }
+
+  .reorder-items-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .rewards-card {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .rewards-points-panel {
+    justify-content: center;
+  }
+}
