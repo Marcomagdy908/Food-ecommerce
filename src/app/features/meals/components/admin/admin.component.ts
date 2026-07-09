@@ -2,6 +2,8 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MealsApiService } from '../../services/meals-api.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -12,6 +14,8 @@ import { MealsApiService } from '../../services/meals-api.service';
 })
 export class AdminComponent implements OnInit {
   private readonly mealsApi = inject(MealsApiService);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
   // UI Tabs State
   public activeTab = signal<string>('overview');
@@ -57,6 +61,11 @@ export class AdminComponent implements OnInit {
   );
 
   ngOnInit() {
+    const user = this.auth.currentUser();
+    if (!user || user.role !== 'admin') {
+      this.router.navigate(['/']);
+      return;
+    }
     this.loadAllData();
   }
 

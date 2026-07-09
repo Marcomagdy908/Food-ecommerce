@@ -3,7 +3,7 @@ import { getMeals, getMealById, createMeal } from '../controllers/meal.controlle
 import { createOrder, getOrders, getMyOrders, getOrderById, updateOrderStatus } from '../controllers/order.controller';
 import { signup, login, logout, getMe, updateAddresses, updateProfile, adjustPoints } from '../controllers/auth.controller';
 import { logClientError, getErrorLogs } from '../controllers/error.controller';
-import { authenticate, requireAuth } from '../middleware/auth.middleware';
+import { authenticate, requireAuth, requireAdmin } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -22,17 +22,17 @@ router.post('/auth/points', requireAuth, adjustPoints);
 // Meal Routes
 router.get('/meals', getMeals);
 router.get('/meals/:id', getMealById);
-router.post('/meals', createMeal);
+router.post('/meals', requireAdmin, createMeal); // Protected: Admins only
 
 // Order Routes
 router.post('/orders', createOrder); // Optional authentication, handled in controller
 router.get('/orders/my', requireAuth, getMyOrders); // Protected, user specific orders
 router.get('/orders/:id', getOrderById); // Open tracker/details page
-router.put('/orders/:id/status', updateOrderStatus); // Admin status updates
-router.get('/orders', getOrders); // Admin/general (all orders)
+router.put('/orders/:id/status', requireAdmin, updateOrderStatus); // Protected: Admins only status updates
+router.get('/orders', requireAdmin, getOrders); // Protected: Admins only (all orders)
 
 // Error Logging Routes
 router.post('/errors/log', logClientError); // Open endpoint for clients to log errors
-router.get('/errors', requireAuth, getErrorLogs); // Protected log listing
+router.get('/errors', requireAdmin, getErrorLogs); // Protected: Admins only log listing
 
 export default router;

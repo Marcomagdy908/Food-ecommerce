@@ -42,6 +42,8 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
   next();
 }
 
+import { User } from '../models/user.model';
+
 /**
  * Guard middleware to reject unauthenticated requests.
  */
@@ -51,4 +53,25 @@ export function requireAuth(req: AuthenticatedRequest, res: Response, next: Next
     return;
   }
   next();
+}
+
+/**
+ * Guard middleware to restrict access to administrators only.
+ */
+export async function requireAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+  if (!req.user) {
+    res.status(401).json({ message: 'Unauthorized. Please log in.' });
+    return;
+  }
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user || user.role !== 'admin') {
+      res.status(403).json({ message: 'Forbidden. Admin privileges required.' });
+      return;
+    }
+    next();
+  } catch (error) {
+    res.status(500).json({ message: 'Server authorization check failed' });
+  }
 }

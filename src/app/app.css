@@ -790,7 +790,7 @@ p {
 }
 
 .pizza-delivery-box::after {
-  content: 'SLICECRAFT GOURMET';
+  content: 'BELLA NAPOLI GOURMET';
   position: absolute;
   bottom: 12px;
   right: 12px;
