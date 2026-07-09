@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, inject, signal, computed, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser, DecimalPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MealsApiService } from '../../services/meals-api.service';
+import { MealsApiService } from '../../../meals/services/meals-api.service';
 import { Subscription, interval } from 'rxjs';
 
 @Component({

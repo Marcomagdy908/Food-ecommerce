@@ -4,9 +4,9 @@ import { RouterLink } from '@angular/router';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
-import { PizzaStateService } from '../../services/pizza-state.service';
+import { PizzaStateService } from '../../../meals/services/pizza-state.service';
 import { CartStateService } from '../../../cart/services/cart-state.service';
-import { PizzaCanvasComponent } from '../pizza-canvas/pizza-canvas.component';
+import { PizzaCanvasComponent } from '../../../meals/components/pizza-canvas/pizza-canvas.component';
 
 @Component({
   selector: 'app-home',

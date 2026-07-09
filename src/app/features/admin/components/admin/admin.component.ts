@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MealsApiService } from '../../services/meals-api.service';
+import { MealsApiService } from '../../../meals/services/meals-api.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CartStateService } from '../../../cart/services/cart-state.service';
 import { AuthService, UserAddress } from '../../../../core/services/auth.service';
-import { MealsApiService } from '../../services/meals-api.service';
+import { MealsApiService } from '../../../meals/services/meals-api.service';
 
 @Component({
   selector: 'app-profile',
@@ -61,16 +61,18 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     if (this.auth.isAuthenticated()) {
-      this.loadOrderHistory();
+      this.loadMyOrders();
     }
   }
 
-  public loadOrderHistory() {
+  public loadMyOrders() {
     this.mealsApi.getMyOrders().subscribe({
-      next: (orders) => {
-        this.recentOrders.set(orders);
+      next: (data) => {
+        this.recentOrders.set(data);
       },
-      error: (err) => console.error('Failed to load order history:', err)
+      error: (err) => {
+        console.error('Failed to load user orders:', err);
+      }
     });
   }
 

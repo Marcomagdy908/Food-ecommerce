@@ -2,7 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MealsApiService } from '../../services/meals-api.service';
+import { MealsApiService } from '../../../meals/services/meals-api.service';
 import { CartStateService } from '../../../cart/services/cart-state.service';
 import { AuthService } from '../../../../core/services/auth.service';
 
