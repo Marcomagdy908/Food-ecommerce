@@ -32,6 +32,7 @@ export class MealDetailComponent implements OnInit {
 
   // Added notification state
   public showAddedAlert = signal<boolean>(false);
+  public addedMessage = signal<string | null>(null);
 
   // Prices dictionaries
   public readonly sizePrices: Record<string, number> = {
@@ -155,6 +156,7 @@ export class MealDetailComponent implements OnInit {
     }
 
     // Visual feedback trigger
+    this.addedMessage.set(customTitle);
     this.showAddedAlert.set(true);
     setTimeout(() => {
       this.showAddedAlert.set(false);
@@ -163,6 +165,10 @@ export class MealDetailComponent implements OnInit {
 
   public addPairingToOrder(drink: MealItem) {
     this.cart.addMeal(drink._id, drink.title, drink.price, drink.imageUrl);
-    alert(`${drink.title} added to your order!`);
+    this.addedMessage.set(drink.title);
+    this.showAddedAlert.set(true);
+    setTimeout(() => {
+      this.showAddedAlert.set(false);
+    }, 2500);
   }
 }

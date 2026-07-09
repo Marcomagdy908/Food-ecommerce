@@ -175,11 +175,11 @@
             </div>
 
             @if (showAddedAlert()) {
-              <div class="add-success-banner animate-fade-in">
+              <div class="add-success-banner animate-fade-in" style="background-color: var(--primary); color: white; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.85rem 1.5rem; border-radius: 8px; font-weight: 600; width: 100%;">
                 <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
                   <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
                 </svg>
-                <span>Added to Order!</span>
+                <span>{{ addedMessage() }} Added!</span>
               </div>
             } @else {
               <button class="btn btn-primary btn-block btn-add-order" (click)="addToOrder()">

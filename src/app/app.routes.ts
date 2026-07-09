@@ -6,6 +6,7 @@ import { ProfileComponent } from './features/meals/components/profile/profile.co
 import { LoginComponent } from './features/auth/components/login/login.component';
 import { SignupComponent } from './features/auth/components/signup/signup.component';
 import { MealDetailComponent } from './features/meals/components/meal-detail/meal-detail.component';
+import { OrderTrackerComponent } from './features/meals/components/order-tracker/order-tracker.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'meals/:id', component: MealDetailComponent },
+  { path: 'orders/:id/track', component: OrderTrackerComponent },
   { path: '**', redirectTo: '' }
 ];

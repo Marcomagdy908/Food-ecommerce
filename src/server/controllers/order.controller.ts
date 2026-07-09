@@ -87,3 +87,17 @@ export async function getMyOrders(req: Request, res: Response): Promise<void> {
     res.status(500).json({ message: 'Failed to retrieve user orders', error: error.message });
   }
 }
+
+export async function getOrderById(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id);
+    if (!order) {
+      res.status(404).json({ message: `Order with ID ${id} not found` });
+      return;
+    }
+    res.status(200).json(order);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Failed to retrieve order details', error: error.message });
+  }
+}

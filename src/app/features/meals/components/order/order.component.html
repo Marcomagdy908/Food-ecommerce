@@ -85,17 +85,17 @@
             }
           } @else {
             <!-- Home Option for Guest -->
-            <div class="address-option-card" [class.selected]="selectedAddress() === 'Guest'" (click)="selectAddress('Guest', 'Via dei Tribunali, 32', 'Napoli')">
+            <div class="address-option-card" [class.selected]="selectedAddress() === 'Guest'" (click)="selectAddress('Guest', 'Zamalek, Cairo', 'Cairo')">
               <input type="radio" name="address" [checked]="selectedAddress() === 'Guest'" class="address-radio" />
               <div class="address-card-info">
                 <span class="address-label">Default Address</span>
-                <span class="address-details">Via dei Tribunali, 32<br>Napoli, 80138</span>
+                <span class="address-details">Zamalek, Cairo<br>Cairo, Egypt</span>
               </div>
             </div>
           }
 
           <!-- Custom Address Option -->
-          <div class="address-option-card" [class.selected]="selectedAddress() === 'Custom'" (click)="selectAddress('Custom', '', 'Napoli')">
+          <div class="address-option-card" [class.selected]="selectedAddress() === 'Custom'" (click)="selectAddress('Custom', '', 'Cairo')">
             <input type="radio" name="address" [checked]="selectedAddress() === 'Custom'" class="address-radio" />
             <div class="address-card-info">
               <span class="address-label">Custom Address</span>
@@ -107,7 +107,57 @@
         @if (selectedAddress() === 'Custom') {
           <div class="custom-address-input-wrapper animate-fade-in">
             <label for="custom-street">Street Address</label>
-            <input type="text" id="custom-street" placeholder="Enter your custom delivery address..." [value]="street() === 'Via dei Tribunali, 32' ? '' : street()" (input)="updateStreet($event)" required />
+            <input type="text" id="custom-street" placeholder="Enter your custom delivery address..." [value]="street() === 'Zamalek, Cairo' ? '' : street()" (input)="updateStreet($event)" required />
+          </div>
+        }
+      </div>
+
+      <!-- Payment Method Section -->
+      <div class="payment-section animate-fade-in" style="margin-top: 3rem;">
+        <h2 class="address-section-title">Payment Method</h2>
+        <div class="address-options-grid">
+          <!-- Cash on Delivery -->
+          <div class="address-option-card" [class.selected]="paymentMethod() === 'Cash'" (click)="selectPaymentMethod('Cash')">
+            <input type="radio" name="paymentMethod" [checked]="paymentMethod() === 'Cash'" class="address-radio" />
+            <div class="address-card-info">
+              <span class="address-label">Cash on Delivery</span>
+              <span class="address-details">Pay in cash when your order arrives.</span>
+            </div>
+          </div>
+
+          <!-- Credit / Debit Card -->
+          <div class="address-option-card" [class.selected]="paymentMethod() === 'Card'" (click)="selectPaymentMethod('Card')">
+            <input type="radio" name="paymentMethod" [checked]="paymentMethod() === 'Card'" class="address-radio" />
+            <div class="address-card-info">
+              <span class="address-label">Credit / Debit Card</span>
+              <span class="address-details">Pay securely online (simulated sandbox).</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card detail fields -->
+        @if (paymentMethod() === 'Card') {
+          <div class="card-details-form animate-fade-in" style="margin-top: 1.5rem;">
+            <div class="form-group-card">
+              <label for="card-holder" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #444842; margin-bottom: 0.25rem; display: block;">Cardholder Name</label>
+              <input type="text" id="card-holder" [(ngModel)]="cardName" placeholder="e.g. Marco Magdy" style="width: 100%; padding: 0.75rem 1rem; background-color: #f5f5dc; border: 1px solid #c4c8c0; border-radius: 8px; color: #1b1d0e; outline: none; box-sizing: border-box;" required />
+            </div>
+
+            <div class="form-group-card" style="margin-top: 1rem;">
+              <label for="card-number" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #444842; margin-bottom: 0.25rem; display: block;">Card Number</label>
+              <input type="text" id="card-number" placeholder="0000-0000-0000-0000" (input)="formatCardNumber($event)" maxlength="19" style="width: 100%; padding: 0.75rem 1rem; background-color: #f5f5dc; border: 1px solid #c4c8c0; border-radius: 8px; color: #1b1d0e; outline: none; box-sizing: border-box;" required />
+            </div>
+
+            <div class="form-row-card" style="display: flex; gap: 1rem; margin-top: 1rem;">
+              <div class="form-group-card" style="flex: 1;">
+                <label for="card-expiry" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #444842; margin-bottom: 0.25rem; display: block;">Expiry Date</label>
+                <input type="text" id="card-expiry" placeholder="MM/YY" (input)="formatExpiry($event)" maxlength="5" style="width: 100%; padding: 0.75rem 1rem; background-color: #f5f5dc; border: 1px solid #c4c8c0; border-radius: 8px; color: #1b1d0e; outline: none; box-sizing: border-box;" required />
+              </div>
+              <div class="form-group-card" style="flex: 1;">
+                <label for="card-cvv" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #444842; margin-bottom: 0.25rem; display: block;">CVV</label>
+                <input type="text" id="card-cvv" placeholder="000" (input)="formatCvv($event)" maxlength="3" style="width: 100%; padding: 0.75rem 1rem; background-color: #f5f5dc; border: 1px solid #c4c8c0; border-radius: 8px; color: #1b1d0e; outline: none; box-sizing: border-box;" required />
+              </div>
+            </div>
           </div>
         }
       </div>
@@ -178,3 +228,36 @@
     </div>
   </div>
 </div>
+
+@if (isProcessingPayment()) {
+  <div class="payment-processing-overlay">
+    <div class="payment-loader-card">
+      <span class="payment-spinner"></span>
+      <h3 class="payment-loader-title text-primary">Secure Transaction Processing</h3>
+      <p class="payment-loader-subtitle">{{ paymentStatusText() }}</p>
+      <span class="payment-secure-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="currentColor" style="margin-right: 0.25rem; vertical-align: text-bottom;">
+          <path d="M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q104-33 172-127t68-225v-176L480-798 240-692v176q0 131 68 225t172 127Zm0-316Z"/>
+        </svg>
+        SSL 256-bit secure tunnel
+      </span>
+    </div>
+  </div>
+}
+
+@if (errorMessageModal(); as msg) {
+  <div class="payment-processing-overlay" style="z-index: 10005;">
+    <div class="payment-loader-card" style="border: 1px solid rgba(186, 26, 26, 0.2); box-shadow: 0 15px 40px rgba(186, 26, 26, 0.08);">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(186, 26, 26, 0.08); display: flex; align-items: center; justify-content: center; color: #ba1a1a;">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+          <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-244h-80v244Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
+        </svg>
+      </div>
+      <h3 class="payment-loader-title text-primary" style="color: #ba1a1a !important;">Action Required</h3>
+      <p style="font-size: 0.95rem; color: #444842; line-height: 1.5; margin: 0; min-height: 2rem;">{{ msg }}</p>
+      <button class="explore-menu-link" (click)="errorMessageModal.set(null)" style="width: 100%; border: none; padding: 0.85rem; border-radius: 8px; font-weight: 600; margin-top: 0.5rem; text-align: center; cursor: pointer;">
+        Okay, I'll fix it
+      </button>
+    </div>
+  </div>
+}

@@ -1,0 +1,257 @@
+@if (isLoading()) {
+  <div class="tracker-loading-wrapper">
+    <span class="tracker-spinner"></span>
+    <p>Connecting to kitchen dispatch...</p>
+  </div>
+} @else if (errorMessage()) {
+  <div class="tracker-error-wrapper animate-slide-up">
+    <div class="error-card">
+      <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" fill="var(--accent)">
+        <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-244h-80v244Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q167 0 283.5-116.5T800-480q0-167-116.5-283.5T480-800q-167 0-283.5 116.5T80-480q0 167 116.5 283.5T480-160Zm0-320Z"/>
+      </svg>
+      <h2>Tracking Details Unavailable</h2>
+      <p>{{ errorMessage() }}</p>
+      <a routerLink="/menu" class="btn btn-secondary">Back to Menu</a>
+    </div>
+  </div>
+} @else {
+  @if (order(); as ord) {
+    <div class="order-tracker-page">
+      
+      <!-- Header & ETA section -->
+      <section class="tracker-header-section animate-fade-in">
+        <div>
+          @if (ord.status === 'Cancelled') {
+            <h1 class="font-display-lg text-display-lg text-error mb-2">Order Cancelled</h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">Order #{{ ord._id.slice(-6).toUpperCase() }} was cancelled.</p>
+          } @else if (ord.status === 'Delivered') {
+            <h1 class="font-display-lg text-display-lg text-primary mb-2">Order Delivered!</h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">Your wood-fired meal has arrived. Buon Appetito!</p>
+          } @else {
+            <h1 class="font-display-lg text-display-lg text-primary mb-2">Buon Appetito!</h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">Order #{{ ord._id.slice(-6).toUpperCase() }} is being crafted with care.</p>
+          }
+        </div>
+
+        @if (ord.status !== 'Cancelled') {
+          <div class="eta-box-container animate-fade-in">
+            <span class="eta-label text-secondary">Estimated Arrival</span>
+            <span class="eta-time text-primary">
+              {{ etaTime() | date:'shortTime' }}
+            </span>
+            <span class="eta-remaining">
+              @if (ord.status === 'Delivered') {
+                Arrived
+              } @else {
+                In approximately {{ minutesRemaining() }} mins
+              }
+            </span>
+          </div>
+        }
+      </section>
+
+      <!-- Main Tracking Content Grid -->
+      <div class="tracker-grid-container">
+        
+        <!-- Left: Steps Progress checklist & courier card -->
+        <div class="tracker-col-steps">
+          
+          <!-- Progress Card -->
+          <div class="bento-tracker-card progress-card">
+            <h3 class="tracker-card-title text-primary">Order Progress</h3>
+            
+            <div class="relative-steps-timeline">
+              <!-- Connecting Line Backing -->
+              <div class="steps-timeline-line-bg"></div>
+              <!-- Active Line Fill -->
+              <div class="steps-timeline-line-fill" [style.height.%]="(currentStepIndex() - 1) * 25"></div>
+
+              <!-- Step 1: Received -->
+              <div class="step-timeline-row" [class.active]="currentStepIndex() >= 1">
+                <div class="step-bullet z-10" [class.completed]="currentStepIndex() > 1" [class.current]="currentStepIndex() === 1">
+                  @if (currentStepIndex() > 1) {
+                    <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+                      <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+                    </svg>
+                  } @else {
+                    <span class="step-bullet-dot"></span>
+                  }
+                </div>
+                <div>
+                  <h4 class="step-title">Order Received</h4>
+                  <p class="step-desc">{{ ord.createdAt | date:'shortTime' }} • Confirmed by the kitchen</p>
+                </div>
+              </div>
+
+              <!-- Step 2: Preparing -->
+              <div class="step-timeline-row" [class.active]="currentStepIndex() >= 2">
+                <div class="step-bullet z-10" [class.completed]="currentStepIndex() > 2" [class.current]="currentStepIndex() === 2">
+                  @if (currentStepIndex() > 2) {
+                    <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+                      <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+                    </svg>
+                  } @else {
+                    <span class="step-bullet-dot"></span>
+                  }
+                </div>
+                <div>
+                  <h4 class="step-title">Preparing</h4>
+                  <p class="step-desc">Artisanal dough is being hand-stretched</p>
+                </div>
+              </div>
+
+              <!-- Step 3: In Oven -->
+              <div class="step-timeline-row" [class.active]="currentStepIndex() >= 3">
+                <div class="step-bullet z-10" [class.completed]="currentStepIndex() > 3" [class.current]="currentStepIndex() === 3" [class.pulsing]="currentStepIndex() === 3">
+                  @if (currentStepIndex() > 3) {
+                    <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+                      <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+                    </svg>
+                  } @else {
+                    <span class="step-bullet-dot"></span>
+                  }
+                </div>
+                <div>
+                  <h4 class="step-title" [class.text-secondary]="currentStepIndex() === 3">In Oven</h4>
+                  <p class="step-desc">Currently wood-firing at 450°C</p>
+                </div>
+              </div>
+
+              <!-- Step 4: Out for Delivery -->
+              <div class="step-timeline-row" [class.active]="currentStepIndex() >= 4">
+                <div class="step-bullet z-10" [class.completed]="currentStepIndex() > 4" [class.current]="currentStepIndex() === 4" [class.pulsing]="currentStepIndex() === 4">
+                  @if (currentStepIndex() > 4) {
+                    <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+                      <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+                    </svg>
+                  } @else {
+                    <span class="step-bullet-dot"></span>
+                  }
+                </div>
+                <div>
+                  <h4 class="step-title" [class.text-secondary]="currentStepIndex() === 4">Out for Delivery</h4>
+                  <p class="step-desc">Our courier is heading your way</p>
+                </div>
+              </div>
+
+              <!-- Step 5: Delivered -->
+              <div class="step-timeline-row" [class.active]="currentStepIndex() >= 5">
+                <div class="step-bullet z-10" [class.completed]="currentStepIndex() >= 5" [class.current]="currentStepIndex() === 5">
+                  @if (currentStepIndex() >= 5) {
+                    <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+                      <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+                    </svg>
+                  } @else {
+                    <span class="step-bullet-dot"></span>
+                  }
+                </div>
+                <div>
+                  <h4 class="step-title">Delivered</h4>
+                  <p class="step-desc">Arrived at your doorstep</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Courier Card -->
+          <div class="courier-card-container">
+            <div class="courier-avatar-ring">
+              <img class="courier-avatar-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb7ALT3selNlVd8gEbYKP1ws4NFbRdNDCvF17mkBuQ3a5sTL78E-RYpVvM6MBLTntXLPjr3_DY4OfEDtPbYwKT5sjUyNUZgg_wTtKBsYA3N3HqHrh0ZVhyxMQJCTud4k_2z8-Hjp1wAtpA1Yv37YvrR0sdNdeiaIadryCgsky8xxQY6w0pDtAlMfnrwIDpLTbiaLqpFOgxH1nQ2HwWVo6SfLP4LiN2xMv4WAfNlUltMtnGk0vv_UFW4FrY3BXotAm79ztD69mtuJE" alt="Courier Photo" />
+            </div>
+            <div class="courier-info-col">
+              <span class="courier-tag text-secondary">Your Courier</span>
+              <h4 class="courier-name text-primary">Marco S.</h4>
+              <div class="courier-rating-row">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="var(--accent)" style="font-variation-settings: 'FILL' 1;">
+                  <path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/>
+                </svg>
+                <span>4.9 Rating</span>
+              </div>
+            </div>
+            <div class="courier-actions">
+              <button class="courier-action-btn" (click)="triggerAlert('Calling courier Marco S. (+39 333 XXXX)...')" aria-label="Call Courier">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+                  <path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 8.5t13.5 21.5l26 162q2 17-2.5 30T348-597l-90 90q57 96 137 176t176 137l90-90q15-15 28.5-19.5t30.5 2.5l162 26q13 2.5 21.5 13.5t8.5 25v162q0 18-12 30t-30 12Z"/>
+                </svg>
+              </button>
+              <button class="courier-action-btn" (click)="triggerAlert('Opening secure messenger portal...')" aria-label="Chat with Courier">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+                  <path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm80-168 88-88h632v-464H160v552Zm0 0v-552 552Z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Map View Large Canvas -->
+        <div class="tracker-col-map">
+          <!-- Real Leaflet Map Container -->
+          <div id="map-canvas" style="width: 100%; height: 100%; z-index: 10;"></div>
+
+          <!-- Zoom Controls -->
+          <div class="map-zoom-buttons" style="z-index: 100;">
+            <button class="zoom-btn" (click)="zoomIn()" aria-label="Zoom In">+</button>
+            <button class="zoom-btn" (click)="zoomOut()" aria-label="Zoom Out">-</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom: Items summary & Support agent -->
+      <section class="tracker-summary-support-section">
+        
+        <!-- Summary items list -->
+        <div class="bento-tracker-card summary-card">
+          <h3 class="tracker-card-title text-primary">Order Summary</h3>
+          
+          <div class="summary-items-box">
+            @for (item of ord.items; track item._id) {
+              <div class="summary-item-row">
+                <span class="item-name-qty">
+                  {{ item.quantity }}x <span class="font-medium">{{ item.title }}</span>
+                </span>
+                <span class="item-dot-leaders"></span>
+                <span class="item-price-sum">${{ (item.priceAtPurchase * item.quantity) | number:'1.2-2' }}</span>
+              </div>
+            }
+            
+            <div class="summary-total-divider"></div>
+            
+            <div class="summary-total-row text-primary">
+              <span>Total</span>
+              <span>${{ ord.totalPrice | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Support Box -->
+        <div class="bento-tracker-card support-card">
+          <span class="material-symbols-outlined support-icon text-secondary">support_agent</span>
+          <h3 class="support-title text-primary">Need Help?</h3>
+          <p class="support-desc">Our concierge is available if you have questions about your artisanal order.</p>
+          <button class="btn btn-secondary btn-block" (click)="triggerAlert('Connecting to support desk agent...')">Contact Support</button>
+        </div>
+
+      </section>
+
+    </div>
+  }
+}
+
+@if (infoMessageModal(); as msg) {
+  <div class="payment-processing-overlay" style="z-index: 10005;">
+    <div class="payment-loader-card" style="border: 1px solid rgba(148, 73, 37, 0.2); box-shadow: 0 15px 40px rgba(148, 73, 37, 0.08);">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(148, 73, 37, 0.08); display: flex; align-items: center; justify-content: center; color: var(--accent);">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+          <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
+        </svg>
+      </div>
+      <h3 class="payment-loader-title text-primary" style="color: var(--accent) !important;">Notice</h3>
+      <p style="font-size: 0.95rem; color: #444842; line-height: 1.5; margin: 0; min-height: 2rem;">{{ msg }}</p>
+      <button class="explore-menu-link" (click)="infoMessageModal.set(null)" style="width: 100%; border: none; padding: 0.85rem; border-radius: 8px; font-weight: 600; margin-top: 0.5rem; text-align: center; cursor: pointer;">
+        Close
+      </button>
+    </div>
+  </div>
+}

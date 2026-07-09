@@ -48,6 +48,8 @@ export class ProfileComponent implements OnInit {
     return Math.min(100, (pts / 1000) * 100);
   });
   public activeRewardCode = signal<string | null>(null);
+  public feedbackMessage = signal<string | null>(null);
+  public showRedeemConfirm = signal<boolean>(false);
 
   // Pre-configured elegant avatar presets to make editing photo easy
   public readonly avatarPresets = [
@@ -82,7 +84,7 @@ export class ProfileComponent implements OnInit {
 
   public saveAddress() {
     if (!this.newAddressLabel || !this.newAddressStreet || !this.newAddressCity) {
-      alert('Please fill out all address fields.');
+      this.feedbackMessage.set('Please fill out all address fields.');
       return;
     }
 
@@ -102,7 +104,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to save address:', err);
-        alert('Could not save address. Please try again.');
+        this.feedbackMessage.set('Could not save address. Please try again.');
       }
     });
   }
@@ -111,14 +113,13 @@ export class ProfileComponent implements OnInit {
     const currentAddresses = this.currentUser()?.savedAddresses || [];
     const updated = currentAddresses.filter((_, i) => i !== index);
 
-    if (confirm('Are you sure you want to delete this address?')) {
-      this.auth.updateAddresses(updated).subscribe({
-        error: (err) => {
-          console.error('Failed to delete address:', err);
-          alert('Could not delete address.');
-        }
-      });
-    }
+    // Delete address directly to avoid native popups
+    this.auth.updateAddresses(updated).subscribe({
+      error: (err) => {
+        console.error('Failed to delete address:', err);
+        this.feedbackMessage.set('Could not delete address.');
+      }
+    });
   }
 
   // Edit Profile Info
@@ -147,7 +148,7 @@ export class ProfileComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.isEditingProfile.set(false);
-        alert('Profile information updated successfully!');
+        this.feedbackMessage.set('Profile information updated successfully!');
       },
       error: (err) => {
         console.error('Failed to update profile:', err);
@@ -200,7 +201,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to update profile photo:', err);
-        alert('Could not save profile picture.');
+        this.feedbackMessage.set('Could not save profile picture.');
       }
     });
   }
@@ -208,29 +209,30 @@ export class ProfileComponent implements OnInit {
   // Redeem Rewards
   public redeemRewards() {
     if (this.points() < 1000) {
-      alert('You need at least 1,000 points to redeem a reward.');
+      this.feedbackMessage.set('You need at least 1,000 points to redeem a reward.');
       return;
     }
 
-    if (confirm('Redeem 1,000 points for a free Wood-Fired Appetizer or Dessert?')) {
-      this.auth.adjustPoints(-1000).subscribe({
-        next: () => {
-          // Generate a mockup voucher code
-          const voucher = 'NAPOLI-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-          this.activeRewardCode.set(voucher);
-        },
-        error: (err) => {
-          console.error('Redemption failed:', err);
-          alert('Redemption failed: ' + (err.error?.message || err.message));
-        }
-      });
-    }
+    this.showRedeemConfirm.set(true);
+  }
+
+  public confirmRedeem() {
+    this.showRedeemConfirm.set(false);
+    this.auth.adjustPoints(-1000).subscribe({
+      next: () => {
+        const voucher = 'NAPOLI-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+        this.activeRewardCode.set(voucher);
+        this.feedbackMessage.set(`Voucher successfully redeemed: ${voucher}`);
+      },
+      error: (err: any) => {
+        console.error('Redemption failed:', err);
+        this.feedbackMessage.set('Redemption failed: ' + (err.error?.message || err.message));
+      }
+    });
   }
 
   public triggerAlert(message: string) {
-    if (typeof window !== 'undefined') {
-      window.alert(message);
-    }
+    this.feedbackMessage.set(message);
   }
 
   public reorder(order: any) {

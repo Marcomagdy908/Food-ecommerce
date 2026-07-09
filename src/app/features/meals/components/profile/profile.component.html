@@ -263,14 +263,26 @@
                       {{ item.quantity }}x {{ item.title }}{{ !last ? ', ' : '' }}
                     }
                   </p>
-                  <p class="item-desc-text">Status: <strong>{{ order.status }}</strong> • Sent to {{ order.deliveryAddress?.street }}</p>
+                  <p class="item-desc-text" style="margin-bottom: 0.5rem;">Status: <strong>{{ order.status }}</strong> • Sent to {{ order.deliveryAddress?.street }}</p>
+                  <p class="item-desc-text" style="margin-top: 0; font-size: 0.8rem; opacity: 0.85;">
+                    @if (order.paymentMethod === 'Card') {
+                      <span>Paid online via Card (Auth Receipt: <strong>{{ order.transactionId || 'Pending' }}</strong>)</span>
+                    } @else {
+                      <span>Cash on Delivery (Pending Payment)</span>
+                    }
+                  </p>
                   <div class="item-footer-flex">
                     <span class="item-price-tag text-primary">${{ order.totalPrice | number:'1.2-2' }}</span>
-                    <button class="reorder-action-btn" (click)="reorder(order)" aria-label="Reorder now">
-                      <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
-                        <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720h592q20 0 32 14.5t1 33.5L736-392q-16 28-44.5 44T630-332H306L188-580H120v-80h102l24 60Zm80 308h304q19 0 34.5-9.5T688-446l110-200H270l56 226Z"/>
-                      </svg>
-                    </button>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                      <a [routerLink]="['/orders', order._id, 'track']" class="btn-sm btn-save" style="text-decoration: none; padding: 0.55rem 1rem; font-size: 0.75rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; white-space: nowrap;">
+                        Track Order
+                      </a>
+                      <button class="reorder-action-btn" (click)="reorder(order)" aria-label="Reorder now">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                          <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720h592q20 0 32 14.5t1 33.5L736-392q-16 28-44.5 44T630-332H306L188-580H120v-80h102l24 60Zm80 308h304q19 0 34.5-9.5T688-446l110-200H270l56 226Z"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -283,6 +295,40 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </div>
+}
+
+@if (feedbackMessage(); as msg) {
+  <div class="edit-profile-modal-overlay" style="z-index: 10005; display: flex; align-items: center; justify-content: center; position: fixed; inset: 0; background: rgba(27, 29, 14, 0.4); backdrop-filter: blur(6px);">
+    <div class="modal-card" style="background-color: #fbfbe2; border: 1px solid rgba(40, 51, 39, 0.15); border-radius: 16px; padding: 2rem; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 15px 40px rgba(40, 51, 39, 0.08); display: flex; flex-direction: column; align-items: center; gap: 1rem; box-sizing: border-box;">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(148, 73, 37, 0.08); display: flex; align-items: center; justify-content: center; color: var(--accent);">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+          <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
+        </svg>
+      </div>
+      <h3 style="font-family: 'EB Garamond', serif; font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--accent);">Notification</h3>
+      <p style="font-size: 0.95rem; color: #444842; line-height: 1.5; margin: 0; min-height: 2rem;">{{ msg }}</p>
+      <button class="btn btn-secondary btn-block" (click)="feedbackMessage.set(null)" style="width: 100%; border-radius: 8px; font-weight: 600; margin-top: 0.5rem; font-family: inherit;">Close</button>
+    </div>
+  </div>
+}
+
+@if (showRedeemConfirm()) {
+  <div class="edit-profile-modal-overlay" style="z-index: 10005; display: flex; align-items: center; justify-content: center; position: fixed; inset: 0; background: rgba(27, 29, 14, 0.4); backdrop-filter: blur(6px);">
+    <div class="modal-card" style="background-color: #fbfbe2; border: 1px solid rgba(148, 73, 37, 0.2); border-radius: 16px; padding: 2.25rem 2rem; width: 90%; max-width: 440px; text-align: center; box-shadow: 0 15px 40px rgba(148, 73, 37, 0.08); display: flex; flex-direction: column; align-items: center; gap: 1.25rem; box-sizing: border-box;">
+      <div style="width: 52px; height: 52px; border-radius: 50%; background-color: rgba(148, 73, 37, 0.08); display: flex; align-items: center; justify-content: center; color: var(--accent);">
+        <svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="26" fill="currentColor">
+          <path d="M480-120q-33 0-56.5-23.5T400-200q0-33 23.5-56.5T480-280q33 0 56.5 23.5T560-200q0 33-23.5 56.5T480-120Zm0-240q-33 0-56.5-23.5T400-440v-240q0-33 23.5-56.5T480-760q33 0 56.5 23.5T560-680v240q0 33-23.5 56.5T480-360Z"/>
+        </svg>
+      </div>
+      <h3 style="font-family: 'EB Garamond', serif; font-size: 1.6rem; font-weight: 600; margin: 0; color: var(--primary);">Redeem Rewards</h3>
+      <p style="font-size: 0.95rem; color: #444842; line-height: 1.5; margin: 0;">Are you sure you want to redeem 1,000 loyalty points for a free Wood-Fired Appetizer or Dessert voucher?</p>
+      
+      <div style="display: flex; gap: 0.75rem; width: 100%; margin-top: 0.5rem;">
+        <button class="btn btn-secondary" (click)="confirmRedeem()" style="flex: 1; border-radius: 8px; font-weight: 700; font-family: inherit;">Yes, Redeem</button>
+        <button class="btn btn-cancel" (click)="showRedeemConfirm.set(false)" style="flex: 1; border-radius: 8px; font-weight: 700; background-color: #efefd7; border: 1px solid #c4c8c0; color: #444842; font-family: inherit; cursor: pointer;">Cancel</button>
       </div>
     </div>
   </div>

@@ -45,6 +45,10 @@ export class MealsApiService {
     return this.http.post<any>(`${this.apiUrl}/orders`, orderPayload);
   }
 
+  public getOrderById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/orders/${id}`);
+  }
+
   public getMyOrders(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/orders/my`);
   }
