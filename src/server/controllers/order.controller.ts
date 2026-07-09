@@ -101,3 +101,26 @@ export async function getOrderById(req: Request, res: Response): Promise<void> {
     res.status(500).json({ message: 'Failed to retrieve order details', error: error.message });
   }
 }
+
+export async function updateOrderStatus(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = ['Pending', 'Preparing', 'OutForDelivery', 'Delivered', 'Cancelled'];
+    if (!validStatuses.includes(status)) {
+      res.status(400).json({ message: 'Invalid order status' });
+      return;
+    }
+
+    const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
+    if (!order) {
+      res.status(404).json({ message: `Order with ID ${id} not found` });
+      return;
+    }
+
+    res.status(200).json(order);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Failed to update order status', error: error.message });
+  }
+}

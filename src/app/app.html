@@ -1,34 +1,36 @@
 <!-- Navigation Header -->
-<header class="navbar">
-  <div class="logo" routerLink="" style="cursor: pointer;">
-    Bella Napoli
-  </div>
-  <nav class="nav-links">
-    <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-    <a routerLink="/menu" routerLinkActive="active">Menu</a>
-    <a routerLink="/order" routerLinkActive="active">Order Online</a>
-    @if (auth.isAuthenticated()) {
-      <a routerLink="/profile" routerLinkActive="active">Profile</a>
-    }
-  </nav>
-  <div class="nav-actions">
-    <div class="cart-btn" routerLink="/order" style="margin-right: 0.5rem;">
-      <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-        <path
-          d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720h592q20 0 32 14.5t1 33.5L736-392q-16 28-44.5 44T630-332H306L188-580H120v-80h102l24 60Zm80 308h304q19 0 34.5-9.5T688-446l110-200H270l56 226Z" />
-      </svg>
-      <span class="cart-count">{{ cart.totalQuantity() }}</span>
+@if (showNavbar()) {
+  <header class="navbar">
+    <div class="logo" routerLink="" style="cursor: pointer;">
+      Bella Napoli
     </div>
-    
-    @if (auth.isAuthenticated()) {
-      <span class="navbar-user-greet" style="font-weight: 600; font-size: 0.9rem; color: var(--text-white);">Hi, {{ firstName() }}</span>
-      <button (click)="logout()" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border-radius: 20px;">Logout</button>
-    } @else {
-      <a routerLink="/login" class="nav-link-login" style="text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.95rem; transition: color 0.3s;" onmouseover="this.style.color='var(--text-white)'" onmouseout="this.style.color='var(--text-muted)'">Login</a>
-      <a routerLink="/signup" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border-radius: 20px;">Sign Up</a>
-    }
-  </div>
-</header>
+    <nav class="nav-links">
+      <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <a routerLink="/menu" routerLinkActive="active">Menu</a>
+      <a routerLink="/order" routerLinkActive="active">Order Online</a>
+      @if (auth.isAuthenticated()) {
+        <a routerLink="/profile" routerLinkActive="active">Profile</a>
+      }
+    </nav>
+    <div class="nav-actions">
+      <div class="cart-btn" routerLink="/order" style="margin-right: 0.5rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+          <path
+            d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720h592q20 0 32 14.5t1 33.5L736-392q-16 28-44.5 44T630-332H306L188-580H120v-80h102l24 60Zm80 308h304q19 0 34.5-9.5T688-446l110-200H270l56 226Z" />
+        </svg>
+        <span class="cart-count">{{ cart.totalQuantity() }}</span>
+      </div>
+      
+      @if (auth.isAuthenticated()) {
+        <span class="navbar-user-greet" style="font-weight: 600; font-size: 0.9rem; color: var(--text-white);">Hi, {{ firstName() }}</span>
+        <button (click)="logout()" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border-radius: 20px;">Logout</button>
+      } @else {
+        <a routerLink="/login" class="nav-link-login" style="text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.95rem; transition: color 0.3s;" onmouseover="this.style.color='var(--text-white)'" onmouseout="this.style.color='var(--text-muted)'">Login</a>
+        <a routerLink="/signup" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border-radius: 20px;">Sign Up</a>
+      }
+    </div>
+  </header>
+}
 
 <main class="main-content-area">
   <router-outlet />

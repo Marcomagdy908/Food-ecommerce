@@ -32,9 +32,13 @@ export class LoginComponent {
     this.errorMessage.set(null);
 
     this.auth.login({ email: this.email, password: this.password }).subscribe({
-      next: () => {
+      next: (user) => {
         this.isLoading.set(false);
-        this.router.navigate(['/profile']);
+        if (user && user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/profile']);
+        }
       },
       error: (err) => {
         this.isLoading.set(false);

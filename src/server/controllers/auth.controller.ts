@@ -58,6 +58,7 @@ export async function signup(req: AuthenticatedRequest, res: Response): Promise<
       email: savedUser.email,
       avatarUrl: savedUser.avatarUrl,
       points: savedUser.points,
+      role: savedUser.role,
       savedAddresses: savedUser.savedAddresses,
       joinedDate: 'Joined ' + new Date(savedUser.createdAt).toLocaleString('default', { month: 'short', year: 'numeric' })
     });
@@ -107,6 +108,7 @@ export async function login(req: AuthenticatedRequest, res: Response): Promise<v
       email: user.email,
       avatarUrl: user.avatarUrl,
       points: user.points,
+      role: user.role,
       savedAddresses: user.savedAddresses,
       joinedDate: 'Joined ' + new Date(user.createdAt).toLocaleString('default', { month: 'short', year: 'numeric' })
     });
@@ -139,6 +141,7 @@ export async function getMe(req: AuthenticatedRequest, res: Response): Promise<v
       email: user.email,
       avatarUrl: user.avatarUrl,
       points: user.points,
+      role: user.role,
       savedAddresses: user.savedAddresses,
       joinedDate: 'Joined ' + new Date(user.createdAt).toLocaleString('default', { month: 'short', year: 'numeric' })
     });

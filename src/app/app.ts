@@ -14,7 +14,7 @@ import { AuthService } from './core/services/auth.service';
   encapsulation: ViewEncapsulation.None
 })
 export class App implements OnInit {
-  protected readonly title = signal('SliceCraft - Premium 3D Pizza');
+  protected readonly title = signal('Bella Napoli - Premium Artisanal Pizza');
 
   public readonly cart = inject(CartStateService);
   private readonly mealsApi = inject(MealsApiService);
@@ -25,6 +25,10 @@ export class App implements OnInit {
     const name = this.auth.currentUser()?.name;
     return name ? name.split(' ')[0] : '';
   });
+
+  public showNavbar(): boolean {
+    return !this.router.url.includes('/admin');
+  }
 
   public meals = signal<MealItem[]>([]);
   public orderSuccess = signal<string | null>(null);

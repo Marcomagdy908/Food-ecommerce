@@ -52,4 +52,20 @@ export class MealsApiService {
   public getMyOrders(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/orders/my`);
   }
+
+  public getAllOrders(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/orders`);
+  }
+
+  public updateOrderStatus(id: string, status: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/orders/${id}/status`, { status });
+  }
+
+  public getErrorLogs(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/errors`);
+  }
+
+  public createMeal(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/meals`, payload);
+  }
 }

@@ -1,0 +1,300 @@
+<div class="admin-dashboard-container">
+  
+  <!-- Side Tab Navigation Links -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand-title">SliceCraft Console</div>
+    <nav class="sidebar-links">
+      <button class="nav-btn" [class.active]="activeTab() === 'overview'" (click)="changeTab('overview')">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+          <path d="M120-120v-320h200v320H120Zm280 0v-640h200v640H400Zm280 0v-440h200v440H680Z"/>
+        </svg>
+        Overview Stats
+      </button>
+      <button class="nav-btn" [class.active]="activeTab() === 'orders'" (click)="changeTab('orders')">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+          <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720h592q20 0 32 14.5t1 33.5L736-392q-16 28-44.5 44T630-332H306L188-580H120v-80h102l24 60Zm80 308h304q19 0 34.5-9.5T688-446l110-200H270l56 226Z"/>
+        </svg>
+        Track Orders Queue
+      </button>
+      <button class="nav-btn" [class.active]="activeTab() === 'add-meal'" (click)="changeTab('add-meal')">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+          <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+        </svg>
+        Add Pizza & Drinks
+      </button>
+      <button class="nav-btn" [class.active]="activeTab() === 'errors'" (click)="changeTab('errors')">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+          <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-244h-80v244Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
+        </svg>
+        System Error Logs
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main View Panel content -->
+  <main class="admin-main-panel">
+    
+    @if (isLoading()) {
+      <div class="loader-overlay-block">
+        <span class="admin-spinner"></span>
+        <p>Loading database information...</p>
+      </div>
+    } @else {
+      
+      <!-- 1. OVERVIEW STATS TAB -->
+      @if (activeTab() === 'overview') {
+        <div class="dashboard-module animate-fade-in">
+          <h1 class="module-main-title">Business Operations Dashboard</h1>
+          
+          <div class="stats-bento-grid">
+            <!-- Total Revenue -->
+            <div class="stats-card">
+              <span class="card-indicator text-secondary">Total Gross Sales</span>
+              <h2 class="card-metric">${{ totalRevenue() | number:'1.2-2' }}</h2>
+              <p class="card-footer-tip">Calculated from delivered & active transactions</p>
+            </div>
+
+            <!-- Total Orders -->
+            <div class="stats-card">
+              <span class="card-indicator text-secondary">Sales Volume</span>
+              <h2 class="card-metric">{{ orders().length }} Orders</h2>
+              <p class="card-footer-tip">{{ deliveredOrdersCount() }} fully completed shipments</p>
+            </div>
+
+            <!-- Average Ticket -->
+            <div class="stats-card">
+              <span class="card-indicator text-secondary">Average Order Size</span>
+              <h2 class="card-metric">${{ averageOrderValue() | number:'1.2-2' }}</h2>
+              <p class="card-footer-tip">Spend per non-cancelled transaction</p>
+            </div>
+
+            <!-- Active Queue -->
+            <div class="stats-card highlight-card">
+              <span class="card-indicator text-secondary font-bold">Active Kitchen Queue</span>
+              <h2 class="card-metric text-primary">{{ activeOrdersCount() }} Orders</h2>
+              <p class="card-footer-tip">Currently in preparation or delivery routes</p>
+            </div>
+          </div>
+
+          <!-- Extra details section -->
+          <div class="overview-details-row" style="margin-top: 3rem;">
+            <div class="bento-overview-box">
+              <h3 class="overview-box-title">Item Distribution Categories</h3>
+              <div class="category-breakdown-list">
+                <div class="category-row">
+                  <span>Pizzas</span>
+                  <span class="cat-progress-bar"><span class="cat-fill-line" style="width: 70%; background-color: var(--accent);"></span></span>
+                  <span class="cat-val">70% sales</span>
+                </div>
+                <div class="category-row">
+                  <span>Organic Fresh Juices</span>
+                  <span class="cat-progress-bar"><span class="cat-fill-line" style="width: 20%; background-color: var(--primary);"></span></span>
+                  <span class="cat-val">20% sales</span>
+                </div>
+                <div class="category-row">
+                  <span>Smoothies</span>
+                  <span class="cat-progress-bar"><span class="cat-fill-line" style="width: 10%; background-color: #8c8f74;"></span></span>
+                  <span class="cat-val">10% sales</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- 2. TRACK ORDERS QUEUE TAB -->
+      @if (activeTab() === 'orders') {
+        <div class="dashboard-module animate-fade-in">
+          <h1 class="module-main-title">Live Dispatch & Order Management</h1>
+          
+          <div class="orders-table-wrapper">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th>Order Reference</th>
+                  <th>Placed At</th>
+                  <th>Delivery Address</th>
+                  <th>Items ordered</th>
+                  <th>Receipt Payment</th>
+                  <th>Total</th>
+                  <th>Update Progress</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (order of orders(); track order._id) {
+                  <tr [class.cancelled-row]="order.status === 'Cancelled'" [class.delivered-row]="order.status === 'Delivered'">
+                    <td>
+                      <span class="order-ref-badge">#{{ order._id.slice(-6).toUpperCase() }}</span>
+                    </td>
+                    <td>{{ order.createdAt | date:'shortTime' }}</td>
+                    <td>
+                      <div class="table-address-box">
+                        <span class="street-detail">{{ order.deliveryAddress?.street }}</span>
+                        <span class="city-detail">{{ order.deliveryAddress?.city }}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="table-items-detail">
+                        @for (item of order.items; track item._id; let last = $last) {
+                          <span>{{ item.quantity }}x {{ item.title }}{{ !last ? ', ' : '' }}</span>
+                        }
+                      </div>
+                    </td>
+                    <td>
+                      <span class="payment-method-badge" [class.card-badge]="order.paymentMethod === 'Card'">
+                        {{ order.paymentMethod === 'Card' ? 'Card: ' + (order.transactionId || 'Auth') : 'Cash' }}
+                      </span>
+                    </td>
+                    <td><strong>${{ order.totalPrice | number:'1.2-2' }}</strong></td>
+                    <td>
+                      <select class="status-selector" [value]="order.status" (change)="updateOrderStatus(order._id, $event)">
+                        <option value="Pending">Pending Confirmation</option>
+                        <option value="Preparing">Preparing in Oven</option>
+                        <option value="OutForDelivery">Out for Delivery</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="7" class="empty-table-callout">No orders have been submitted to the database yet.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+
+      <!-- 3. ADD PIZZA & DRINKS TAB -->
+      @if (activeTab() === 'add-meal') {
+        <div class="dashboard-module animate-fade-in">
+          <h1 class="module-main-title">Catalog Creator</h1>
+          
+          <div class="catalog-forms-layout">
+            <!-- Add Meal Form Card -->
+            <div class="bento-form-card">
+              <h3 class="form-card-header text-primary">Meal Profile Details</h3>
+              
+              <div class="form-row-group">
+                <div class="form-input-field flex-grow-1">
+                  <label for="meal-title">Item Title</label>
+                  <input type="text" id="meal-title" [(ngModel)]="newMealTitle" placeholder="e.g. Quattro Formaggi Deluxe" />
+                </div>
+                <div class="form-input-field" style="width: 140px;">
+                  <label for="meal-price">Base Price ($)</label>
+                  <input type="number" id="meal-price" [(ngModel)]="newMealPrice" step="0.50" min="1" />
+                </div>
+              </div>
+
+              <div class="form-input-field">
+                <label for="meal-desc">Description & Ingredients</label>
+                <textarea id="meal-desc" rows="4" [(ngModel)]="newMealDesc" placeholder="Describe the ingredients, wood-fired highlights, toppings offset details..."></textarea>
+              </div>
+
+              <div class="form-row-group">
+                <div class="form-input-field flex-half">
+                  <label for="meal-category">Item Category</label>
+                  <select id="meal-category" [(ngModel)]="newMealCategory">
+                    <option value="Pizzas">Wood-Fired Pizza</option>
+                    <option value="Fresh Juices">Organic Fresh Juice</option>
+                    <option value="Smoothies">Gourmet Smoothie</option>
+                  </select>
+                </div>
+                <div class="form-input-field flex-half">
+                  <label for="meal-tags">Tags (Comma Separated)</label>
+                  <input type="text" id="meal-tags" [(ngModel)]="newMealTags" placeholder="e.g. Vegetarian, Chef Special, Organic" />
+                </div>
+              </div>
+
+              <!-- Base64 Photo Uploader -->
+              <div class="form-input-field">
+                <label>Upload Meal Photo</label>
+                <div class="admin-file-upload-box">
+                  <input type="file" id="meal-image-file" (change)="onFileSelected($event)" accept="image/*" class="admin-hidden-file-input" />
+                  <label for="meal-image-file" class="admin-file-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+                      <path d="M440-320v-244L340-464l-56 56 196 196 196-196-56-56-100 100v244h-80ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z"/>
+                    </svg>
+                    <span>{{ selectedFileName ? selectedFileName : 'Drag & drop or click to upload local photo' }}</span>
+                  </label>
+                </div>
+                
+                @if (newMealImageUrl) {
+                  <div class="avatar-edit-preview" style="margin-top: 1.5rem; text-align: center;">
+                    <img [src]="newMealImageUrl" alt="Meal Preview" style="width: 180px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #c4c8c0;" />
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Preview of the item image (Base64 saved)</p>
+                  </div>
+                }
+              </div>
+
+              <div class="form-actions-admin">
+                <button class="explore-menu-link" (click)="submitNewMeal()" style="width: 100%; border: none; padding: 1rem; border-radius: 8px; cursor: pointer; text-align: center;">
+                  Add Meal to Catalog
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- 4. SYSTEM ERROR LOGS TAB -->
+      @if (activeTab() === 'errors') {
+        <div class="dashboard-module animate-fade-in">
+          <h1 class="module-main-title">Realtime System Error Diagnostics</h1>
+          
+          <div class="error-logs-viewer-box">
+            @for (log of errorLogs(); track log._id) {
+              <div class="error-log-card animate-slide-up">
+                <div class="error-log-summary">
+                  <span class="error-method-tag">{{ log.method }}</span>
+                  <span class="error-url-path">{{ log.url }}</span>
+                  <span class="error-date-tag">{{ log.timestamp | date:'short' }}</span>
+                </div>
+                <div class="error-log-message">
+                  <strong>Message:</strong> {{ log.message }}
+                </div>
+                <div class="error-log-stack-trace">
+                  <pre><code>{{ log.stack || 'No stack trace captured.' }}</code></pre>
+                </div>
+                <div class="error-log-meta">
+                  <span>Source: <strong>{{ log.source }}</strong></span> • 
+                  <span>IP Address: {{ log.ip || 'Unknown' }}</span> • 
+                  <span>User-Agent: <span class="ua-text" [title]="log.userAgent">{{ log.userAgent }}</span></span>
+                </div>
+              </div>
+            } @empty {
+              <div class="no-errors-block">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" fill="var(--primary)">
+                  <path d="m382-354 182-182-56-56-126 126-56-56-56 56 112 112ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                </svg>
+                <h3>Clean Health Status</h3>
+                <p>No backend or frontend errors logged. SliceCraft is running smoothly.</p>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+    }
+  </main>
+
+  <!-- Glassmorphic Dialog Modal overlays for alerts -->
+  @if (feedbackMessage(); as msg) {
+    <div class="edit-profile-modal-overlay" style="z-index: 10005; display: flex; align-items: center; justify-content: center; position: fixed; inset: 0; background: rgba(27, 29, 14, 0.4); backdrop-filter: blur(6px);">
+      <div class="modal-card" style="background-color: #fbfbe2; border: 1px solid rgba(40, 51, 39, 0.15); border-radius: 16px; padding: 2rem; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 15px 40px rgba(40, 51, 39, 0.08); display: flex; flex-direction: column; align-items: center; gap: 1rem; box-sizing: border-box;">
+        <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(148, 73, 37, 0.08); display: flex; align-items: center; justify-content: center; color: var(--accent);">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+            <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
+          </svg>
+        </div>
+        <h3 style="font-family: 'EB Garamond', serif; font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--accent);">Console Alert</h3>
+        <p style="font-size: 0.95rem; color: #444842; line-height: 1.5; margin: 0; min-height: 2rem;">{{ msg }}</p>
+        <button class="btn btn-secondary btn-block" (click)="feedbackMessage.set(null)" style="width: 100%; border-radius: 8px; font-weight: 600; margin-top: 0.5rem; font-family: inherit;">Close</button>
+      </div>
+    </div>
+  }
+
+</div>

@@ -18,6 +18,7 @@ export interface User {
   savedAddresses: UserAddress[];
   joinedDate: string;
   points: number;
+  role?: string;
 }
 
 @Injectable({

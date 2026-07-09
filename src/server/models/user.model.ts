@@ -13,6 +13,7 @@ const UserSchema = new Schema({
   passwordHash: { type: String, required: true },
   avatarUrl: { type: String, required: false },
   points: { type: Number, default: 0, required: true },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
   savedAddresses: [AddressSchema]
 }, { timestamps: true });
 

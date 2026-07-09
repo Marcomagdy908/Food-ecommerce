@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getMeals, getMealById, createMeal } from '../controllers/meal.controller';
-import { createOrder, getOrders, getMyOrders, getOrderById } from '../controllers/order.controller';
+import { createOrder, getOrders, getMyOrders, getOrderById, updateOrderStatus } from '../controllers/order.controller';
 import { signup, login, logout, getMe, updateAddresses, updateProfile, adjustPoints } from '../controllers/auth.controller';
 import { logClientError, getErrorLogs } from '../controllers/error.controller';
 import { authenticate, requireAuth } from '../middleware/auth.middleware';
@@ -28,6 +28,7 @@ router.post('/meals', createMeal);
 router.post('/orders', createOrder); // Optional authentication, handled in controller
 router.get('/orders/my', requireAuth, getMyOrders); // Protected, user specific orders
 router.get('/orders/:id', getOrderById); // Open tracker/details page
+router.put('/orders/:id/status', updateOrderStatus); // Admin status updates
 router.get('/orders', getOrders); // Admin/general (all orders)
 
 // Error Logging Routes

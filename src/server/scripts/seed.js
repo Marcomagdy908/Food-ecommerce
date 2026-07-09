@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
   savedAddresses: [AddressSchema]
 }, { timestamps: true });
 
@@ -139,6 +140,25 @@ const egyptianLastNames = ['Hassan', 'Mohamed', 'Ibrahim', 'Ahmed', 'Ali', 'Mahm
 
 function generateUsers() {
   const users = [];
+
+  // Seed the main Administrator user first
+  users.push({
+    name: 'Admin Marco',
+    email: 'admin@slicecraft.com',
+    passwordHash: hashPassword('AdminPassword123!'),
+    role: 'admin',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&q=80',
+    points: 5000,
+    savedAddresses: [
+      {
+        label: 'Zamalek HQ',
+        street: '15 El-Horreya Road, Zamalek',
+        city: 'Cairo',
+        coordinates: [30.0596, 31.2241]
+      }
+    ]
+  });
+
   for (let i = 0; i < 30; i++) {
     const fname = egyptianFirstNames[i % egyptianFirstNames.length];
     const lname = egyptianLastNames[i % egyptianLastNames.length];
