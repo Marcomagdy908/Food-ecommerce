@@ -274,7 +274,7 @@
   .craft-text>*,
   .ingredients-text>* {
     position: absolute;
-    top: 10%;
+    top: 50%;
     left: 0;
     transform: translateY(-50%);
     width: 100%;

@@ -24,15 +24,19 @@
                 <div class="basket-item-actions">
                   <div class="quantity-control-pill">
                     <button aria-label="Decrease quantity" type="button" class="qty-btn" (click)="decrementQuantity(item.mealId)">
-                      <i class="fa-solid fa-minus text-xs"></i>
+                      <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+                        <path d="M200-440v-80h560v-80H200v80Z"/>
+                      </svg>
                     </button>
                     <span class="qty-val">{{ item.quantity }}</span>
                     <button aria-label="Increase quantity" type="button" class="qty-btn" (click)="incrementQuantity(item.mealId, item.title, item.price, item.imageUrl)">
-                      <i class="fa-solid fa-plus text-xs"></i>
+                      <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+                      </svg>
                     </button>
                   </div>
                   <button class="remove-item-btn" type="button" (click)="removeItem(item.mealId)">
-                    <i class="fa-solid fa-trash-can"></i> Remove
+                    Remove
                   </button>
                 </div>
               </div>
@@ -41,7 +45,6 @@
         </div>
       } @else {
         <div class="empty-basket-banner">
-          <i class="fa-solid fa-basket-shopping text-4xl opacity-30 mb-4 block"></i>
           <p>Your shopping basket is currently empty.</p>
           <a routerLink="/menu" class="explore-menu-link">Explore Our Menu</a>
         </div>
@@ -50,15 +53,46 @@
       <!-- Delivery Address Selector -->
       <div class="address-section">
         <h2 class="address-section-title">Delivery Address</h2>
-        <div class="address-options-grid">
-          <!-- Home option -->
-          <div class="address-option-card" [class.selected]="selectedAddress() === 'Home'" (click)="selectAddress('Home', 'Via dei Tribunali, 32', 'Napoli')">
-            <input type="radio" name="address" [checked]="selectedAddress() === 'Home'" class="address-radio" />
-            <div class="address-card-info">
-              <span class="address-label">Home Address</span>
-              <span class="address-details">Via dei Tribunali, 32<br>Napoli, 80138</span>
-            </div>
+        
+        @if (!auth.isAuthenticated()) {
+          <div class="login-tip-callout">
+            <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="var(--accent)">
+              <path d="M480-120q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-440q0-28 3.5-55.5T134-550l260 260v70q0 25 17.5 42.5T454-160h26v80Zm140-52-52-52q9-4 17.5-8.5T601-203l86 31q-16 18-35 32.5T620-132Zm134-94-68-68q13-10 24.5-22t20.5-26l76 50q-12 18-26.5 35T754-226Zm68-112-78-26q4-11 6.5-22.5T751-410l80 8q-2 18-5.5 35.5T822-338Zm14-118-80-6q-1-12-3.5-23.5T746-510l74-32q8 16 12 33t4 35Zm-14-118-72 36q-6-10-13.5-19.5T723-611l62-52q15 15 26.5 33t16.5 38Zm-46-100-58 56q-10-7-21-12.5T673-718l44-68q21 10 39.5 24.5T776-728Zm-76-72-40 70q-12-4-24.5-6t-25.5-2l22-78q22 3 43 10.5T700-800Zm-106-44-18 78q-14 0-27.5 1.5T521-761v-80q20-3 39.5-3.5t39.5.5ZM431-80h23v-80h-26v80h3ZM260-290v-70h26q25 0 42.5-17.5T346-420v-26h70v26q0 54-38 92t-92 38h-26Zm160-160v-62l76-76 68 68-144 70Z"/>
+            </svg>
+            <span>Tip: <a routerLink="/login" class="inline-login-link">Log in</a> to use your saved addresses and earn Napoli Rewards!</span>
           </div>
+        }
+
+        <div class="address-options-grid">
+          @if (auth.isAuthenticated()) {
+            <!-- Saved Addresses -->
+            @for (addr of auth.currentUser()?.savedAddresses; track addr.label) {
+              <div class="address-option-card" [class.selected]="selectedAddress() === addr.label" (click)="selectAddress(addr.label, addr.street, addr.city)">
+                <input type="radio" name="address" [checked]="selectedAddress() === addr.label" class="address-radio" />
+                <div class="address-card-info">
+                  <span class="address-label">{{ addr.label }} Address</span>
+                  <span class="address-details">{{ addr.street }}<br>{{ addr.city }}</span>
+                </div>
+              </div>
+            } @empty {
+              <div class="address-option-card disabled-card" style="opacity: 0.65; cursor: not-allowed;">
+                <input type="radio" name="address" [checked]="false" class="address-radio" disabled />
+                <div class="address-card-info">
+                  <span class="address-label" style="color: var(--accent);">No Saved Address</span>
+                  <span class="address-details">Not saved.<br>Add one in profile settings.</span>
+                </div>
+              </div>
+            }
+          } @else {
+            <!-- Home Option for Guest -->
+            <div class="address-option-card" [class.selected]="selectedAddress() === 'Guest'" (click)="selectAddress('Guest', 'Via dei Tribunali, 32', 'Napoli')">
+              <input type="radio" name="address" [checked]="selectedAddress() === 'Guest'" class="address-radio" />
+              <div class="address-card-info">
+                <span class="address-label">Default Address</span>
+                <span class="address-details">Via dei Tribunali, 32<br>Napoli, 80138</span>
+              </div>
+            </div>
+          }
 
           <!-- Custom Address Option -->
           <div class="address-option-card" [class.selected]="selectedAddress() === 'Custom'" (click)="selectAddress('Custom', '', 'Napoli')">
@@ -119,7 +153,11 @@
         <form (submit)="submitOrder($event)">
           @if (orderSuccess()) {
             <div class="order-success-banner">
-              <i class="fa-solid fa-circle-check text-lg"></i>
+              <span class="success-icon-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+                  <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+                </svg>
+              </span>
               <span>{{ orderSuccess() }}</span>
             </div>
           } @else {
@@ -131,7 +169,9 @@
 
         <!-- Trust Security Indicators -->
         <div class="security-trust-badge">
-          <i class="fa-solid fa-shield-halved"></i>
+          <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+            <path d="M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q104-33 172-127t68-225v-176L480-798 240-692v176q0 131 68 225t172 127Zm0-316Z"/>
+          </svg>
           <span>Secure Checkout</span>
         </div>
       </div>

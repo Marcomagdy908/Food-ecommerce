@@ -1,12 +1,13 @@
 import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser, DecimalPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { MealsApiService, MealItem } from '../../services/meals-api.service';
 import { CartStateService } from '../../../cart/services/cart-state.service';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, RouterLink],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css']
 })

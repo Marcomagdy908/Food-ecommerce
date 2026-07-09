@@ -1,0 +1,278 @@
+@if (isLoading()) {
+  <div class="detail-loading-wrapper">
+    <span class="detail-spinner"></span>
+    <p>Preparing authentic Neapolitan details...</p>
+  </div>
+} @else if (errorMessage()) {
+  <div class="detail-error-wrapper animate-slide-up">
+    <div class="error-card">
+      <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" fill="var(--accent)">
+        <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q167 0 283.5-116.5T800-480q0-167-116.5-283.5T480-800q-167 0-283.5 116.5T80-480q0 167 116.5 283.5T480-160Zm0-320Z"/>
+      </svg>
+      <h2>Oops! Pizza Not Found</h2>
+      <p>{{ errorMessage() }}</p>
+      <a routerLink="/menu" class="btn btn-secondary">Back to Menu</a>
+    </div>
+  </div>
+} @else {
+  @if (meal(); as item) {
+    <div class="meal-detail-container">
+      <!-- Hero Section -->
+      <section class="detail-hero-section">
+        <div class="hero-image-wrapper">
+          <img [src]="item.imageUrl" [alt]="item.title" class="hero-image" />
+        </div>
+        
+        <div class="hero-text-col">
+          <nav class="detail-breadcrumbs">
+            <a routerLink="/menu" class="breadcrumb-link">Menu</a>
+            <svg class="breadcrumb-sep" xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+              <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+            </svg>
+            <span class="breadcrumb-current">{{ item.category }}</span>
+          </nav>
+          
+          <h1 class="detail-title text-primary">{{ item.title }}</h1>
+          <p class="detail-price text-secondary">${{ item.price | number:'1.2-2' }}</p>
+          <p class="detail-description">{{ item.description }}</p>
+          
+          <div class="detail-tags-row">
+            @for (tag of item.tags; track tag) {
+              <span class="tag-badge-filled">{{ tag }}</span>
+            }
+            <span class="tag-badge-outline">Wood-Fired</span>
+            <span class="tag-badge-outline">DOP Certified</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Customization & Ordering Bento Grid -->
+      <section class="customization-bento-grid">
+        <!-- Left: Customization selections -->
+        <div class="bento-customization-options">
+          
+          <!-- Size & Dough Selections Row -->
+          <div class="options-pair-row">
+            <!-- Select Size -->
+            <div class="options-card">
+              <h3 class="options-card-title text-primary">Select Size</h3>
+              <div class="options-list">
+                <label class="option-row" [class.selected]="selectedSize() === 'Classic 12\''" (click)="selectSize('Classic 12&quot;')">
+                  <div class="option-left">
+                    <input type="radio" name="size" [checked]="selectedSize() === 'Classic 12\''" class="option-radio" />
+                    <span>Classic 12"</span>
+                  </div>
+                  <span class="option-offset">+ $0.00</span>
+                </label>
+                
+                <label class="option-row" [class.selected]="selectedSize() === 'Large 16\''" (click)="selectSize('Large 16&quot;')">
+                  <div class="option-left">
+                    <input type="radio" name="size" [checked]="selectedSize() === 'Large 16\''" class="option-radio" />
+                    <span>Large 16"</span>
+                  </div>
+                  <span class="option-offset">+ $6.50</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Choice of Dough -->
+            <div class="options-card">
+              <h3 class="options-card-title text-primary">Choice of Dough</h3>
+              <div class="options-list">
+                <label class="option-row" [class.selected]="selectedDough() === 'Traditional Neapolitan'" (click)="selectDough('Traditional Neapolitan')">
+                  <div class="option-left">
+                    <input type="radio" name="dough" [checked]="selectedDough() === 'Traditional Neapolitan'" class="option-radio" />
+                    <span>Traditional Neapolitan</span>
+                  </div>
+                  <span class="option-offset">+ $0.00</span>
+                </label>
+                
+                <label class="option-row" [class.selected]="selectedDough() === 'Whole Grain'" (click)="selectDough('Whole Grain')">
+                  <div class="option-left">
+                    <input type="radio" name="dough" [checked]="selectedDough() === 'Whole Grain'" class="option-radio" />
+                    <span>Whole Grain</span>
+                  </div>
+                  <span class="option-offset">+ $1.50</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toppings Panel -->
+          <div class="options-card toppings-card">
+            <h3 class="options-card-title text-primary">Extra Toppings</h3>
+            <div class="toppings-flex-grid">
+              
+              @for (topping of ['Buffalo Mozzarella', 'Spicy Salami', 'Fresh Arugula', 'Anchovies']; track topping) {
+                <div class="topping-item-row" (click)="toggleTopping(topping)">
+                  <span class="topping-name dot-leader">{{ topping }}</span>
+                  <div class="topping-action-flex">
+                    <span class="topping-price">${{ toppingPrices[topping] | number:'1.2-2' }}</span>
+                    <button class="topping-toggle-btn" [class.active]="selectedToppings().has(topping)" aria-label="Toggle Topping">
+                      <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              }
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Summary Sidebar -->
+        <div class="bento-summary-sidebar">
+          <div class="summary-floating-card">
+            <div>
+              <h4 class="summary-card-title text-primary">Order Summary</h4>
+              <p class="summary-custom-desc">{{ selectedSize() }}, {{ selectedDough() }}</p>
+            </div>
+            
+            <div class="summary-prices-list">
+              <div class="summary-row">
+                <span>Pizza (Base)</span>
+                <span>${{ item.price | number:'1.2-2' }}</span>
+              </div>
+              @if (sizePriceOffset() > 0) {
+                <div class="summary-row">
+                  <span>Size Upgrade</span>
+                  <span>+ ${{ sizePriceOffset() | number:'1.2-2' }}</span>
+                </div>
+              }
+              @if (doughPriceOffset() > 0) {
+                <div class="summary-row">
+                  <span>Whole Grain Dough</span>
+                  <span>+ ${{ doughPriceOffset() | number:'1.2-2' }}</span>
+                </div>
+              }
+              @if (toppingsPriceOffset() > 0) {
+                <div class="summary-row">
+                  <span>Extra Toppings</span>
+                  <span>+ ${{ toppingsPriceOffset() | number:'1.2-2' }}</span>
+                </div>
+              }
+              <div class="summary-divider"></div>
+              <div class="summary-row total-row text-primary">
+                <span>Total</span>
+                <span class="total-price-text">${{ totalPrice() | number:'1.2-2' }}</span>
+              </div>
+            </div>
+
+            <!-- Quantity Counter Controls -->
+            <div class="detail-quantity-pill">
+              <button class="qty-adjust-btn" (click)="decrementQuantity()" aria-label="Decrease quantity">
+                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                  <path d="M200-440v-80h560v-80H200v80Z"/>
+                </svg>
+              </button>
+              <span class="qty-counter-val">{{ quantity() }}</span>
+              <button class="qty-adjust-btn" (click)="incrementQuantity()" aria-label="Increase quantity">
+                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                  <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+                </svg>
+              </button>
+            </div>
+
+            @if (showAddedAlert()) {
+              <div class="add-success-banner animate-fade-in">
+                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                  <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+                </svg>
+                <span>Added to Order!</span>
+              </div>
+            } @else {
+              <button class="btn btn-primary btn-block btn-add-order" (click)="addToOrder()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor" style="margin-right: 0.5rem;">
+                  <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720h592q20 0 32 14.5t1 33.5L736-392q-16 28-44.5 44T630-332H306L188-580H120v-80h102l24 60Zm80 308h304q19 0 34.5-9.5T688-446l110-200H270l56 226Z"/>
+                </svg>
+                Add to Order
+              </button>
+            }
+
+            <div class="prep-time-row">
+              <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="currentColor">
+                <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320l170 170-56 56-114-114v-212h80v120Z"/>
+              </svg>
+              <span>Prep time: 12-15 mins</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Artisanal Story -->
+      <section class="detail-story-section">
+        <div class="story-image-col">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ4SaW7IYJl3ity1pzFXVaMazQVgL0QFNp9TYgDIJZmQCXqZuEuFoqY_EdrH1Ni4VL03I2XRnXL5EEO6J9zCx1s4KOX_eQjS0UkICMes_aKpm8cAf9e_zSJ4jHa4zTqlZKj40rYGHqGTro-WJbvpp5FvHMS5fDxG5dbCdeHO2KXXI4rGu-dKtD6hSd5MilNLCtgJZt63NPs98WWqX87mYJ44s7m1AgG0u9kaj6XP-VWzWJXeaPj5Ubw-fHN7devEhSJIUD-Toos18" alt="Artisanal story raw ingredients" class="story-image" />
+        </div>
+        <div class="story-text-col">
+          <h2 class="story-title text-primary">The Artisanal Story</h2>
+          <div class="story-divider-line"></div>
+          <div class="story-paragraphs">
+            <p>Every artisanal slice begins with our long-fermentation sourdough starter, aged for 48 hours to achieve the perfect balance of pillowy lightness, crispy texture, and deep flavor. We source our San Marzano tomatoes directly from the volcanic soils of Campania, hand-crushing them to retain sweetness.</p>
+            <p>Our fresh mozzarella is crafted locally and flown in weekly, melting into perfect creamy pockets. Finished with a heavy drizzle of cold-pressed extra virgin olive oil and fresh basil picked from our kitchen herb garden.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Nutrition & Pairings Column -->
+      <section class="detail-nutrition-pairings">
+        <!-- Nutrition -->
+        <div class="nutrition-card">
+          <h3 class="section-sub-title text-primary">Nutrition & Allergens</h3>
+          <div class="nutrition-bento-grid">
+            <div class="nut-item">
+              <span class="nut-label">Calories</span>
+              <span class="nut-value text-secondary">840 kcal</span>
+            </div>
+            <div class="nut-item">
+              <span class="nut-label">Protein</span>
+              <span class="nut-value text-secondary">32g</span>
+            </div>
+            <div class="nut-item">
+              <span class="nut-label">Carbs</span>
+              <span class="nut-value text-secondary">96g</span>
+            </div>
+            <div class="nut-item">
+              <span class="nut-label">Fat</span>
+              <span class="nut-value text-secondary">28g</span>
+            </div>
+          </div>
+          
+          <div class="allergen-callout">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="var(--accent)">
+              <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q167 0 283.5-116.5T800-480q0-167-116.5-283.5T480-800q-167 0-283.5 116.5T80-480q0 167 116.5 283.5T480-160Zm0-320Z"/>
+            </svg>
+            <p><strong>Allergens:</strong> Contains Gluten, Dairy. Prepared in a workspace that also handles nuts.</p>
+          </div>
+        </div>
+
+        <!-- Perfect Pairings -->
+        <div class="pairings-card">
+          <h3 class="section-sub-title text-primary">Perfect with</h3>
+          <div class="pairings-list">
+            @for (drink of drinkPairings(); track drink._id) {
+              <div class="pairing-item group">
+                <div class="pairing-img-wrapper">
+                  <img [src]="drink.imageUrl" [alt]="drink.title" class="pairing-image" />
+                </div>
+                <div class="pairing-details">
+                  <h4 class="pairing-item-title text-primary">{{ drink.title }}</h4>
+                  <p class="pairing-item-desc">{{ drink.description }}</p>
+                  <span class="pairing-item-price text-secondary">${{ drink.price | number:'1.2-2' }}</span>
+                </div>
+                <button class="pairing-add-btn" (click)="addPairingToOrder(drink)" aria-label="Add pairing item">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+                    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+                  </svg>
+                </button>
+              </div>
+            } @empty {
+              <p class="empty-pairings-text">Browse our drinks list in the menu page!</p>
+            }
+          </div>
+        </div>
+      </section>
+    </div>
+  }
+}

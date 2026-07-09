@@ -1,0 +1,84 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card animate-slide-up">
+    <div class="auth-header">
+      <h1 class="auth-title text-primary">Create Account</h1>
+      <p class="auth-subtitle">Join SliceCraft to order premium 3D wood-fired pizzas and earn Napoli Rewards.</p>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="auth-error-alert animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+          <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q167 0 283.5-116.5T800-480q0-167-116.5-283.5T480-800q-167 0-283.5 116.5T80-480q0 167 116.5 283.5T480-160Zm0-320Z"/>
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <form (ngSubmit)="onSubmit()" #signupForm="ngForm" class="auth-form">
+      <div class="form-group">
+        <label for="name" class="form-label">Full Name</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            [(ngModel)]="name"
+            #nameInput="ngModel"
+            required
+            placeholder="e.g. Alessandro Ricci"
+            class="form-input"
+            [class.input-error]="nameInput.invalid && nameInput.touched"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <div class="input-wrapper">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            #emailInput="ngModel"
+            required
+            email
+            placeholder="e.g. alessandro@artisan.com"
+            class="form-input"
+            [class.input-error]="emailInput.invalid && emailInput.touched"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-wrapper">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            #passwordInput="ngModel"
+            required
+            minlength="6"
+            placeholder="Min. 6 characters"
+            class="form-input"
+            [class.input-error]="passwordInput.invalid && passwordInput.touched"
+          />
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="signupForm.invalid || isLoading()" class="btn btn-primary btn-block btn-auth">
+        @if (isLoading()) {
+          <span class="auth-spinner"></span> Creating Account...
+        } @else {
+          Create Account
+        }
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a routerLink="/login" class="auth-link">Sign In</a></p>
+    </div>
+  </div>
+</div>

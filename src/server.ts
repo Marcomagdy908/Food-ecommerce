@@ -8,11 +8,12 @@ import express from 'express';
 import { join } from 'node:path';
 import { connectDB } from './server/config/db';
 import apiRouter from './server/routes/api.routes';
+import { globalErrorHandler } from './server/middleware/error.middleware';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 
 // Connect to database
 connectDB();
@@ -46,6 +47,9 @@ app.use((req, res, next) => {
     )
     .catch(next);
 });
+
+// Global unhandled error logging middleware
+app.use(globalErrorHandler);
 
 /**
  * Start the server if this module is the main entry point, or it is ran via PM2.

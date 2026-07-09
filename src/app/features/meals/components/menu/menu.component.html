@@ -33,25 +33,29 @@
 
     <div class="meals-grid-stitch">
       @for (meal of filteredMeals; track meal._id) {
-        <div class="meal-card-stitch group">
-          <!-- Card Image Top -->
-          <div class="meal-image-container">
-            <img class="meal-image" [src]="meal.imageUrl" [alt]="meal.title" />
-            @if (meal.tags && meal.tags.length > 0) {
-              <div class="badge-overlay-container">
-                <span class="badge-overlay">{{ meal.tags[0] }}</span>
-              </div>
-            }
-          </div>
-
-          <!-- Card Content Details -->
-          <div class="meal-info-container">
-            <div class="dot-leader-header">
-              <h3 class="meal-title">{{ meal.title }}</h3>
-              <span class="meal-price">${{ meal.price | number:'1.2-2' }}</span>
+        <div class="meal-card-stitch group" style="display: flex; flex-direction: column;">
+          <a [routerLink]="['/meals', meal._id]" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; flex-grow: 1; cursor: pointer;">
+            <!-- Card Image Top -->
+            <div class="meal-image-container">
+              <img class="meal-image" [src]="meal.imageUrl" [alt]="meal.title" />
+              @if (meal.tags && meal.tags.length > 0) {
+                <div class="badge-overlay-container">
+                  <span class="badge-overlay">{{ meal.tags[0] }}</span>
+                </div>
+              }
             </div>
-            <p class="meal-desc">{{ meal.description }}</p>
 
+            <!-- Card Content Details -->
+            <div class="meal-info-container" style="flex-grow: 1; padding-bottom: 0;">
+              <div class="dot-leader-header">
+                <h3 class="meal-title">{{ meal.title }}</h3>
+                <span class="meal-price">${{ meal.price | number:'1.2-2' }}</span>
+              </div>
+              <p class="meal-desc">{{ meal.description }}</p>
+            </div>
+          </a>
+
+          <div class="meal-info-container" style="padding-top: 0.5rem; margin-top: auto;">
             <div class="meal-footer">
               <div class="tags-col">
                 <span class="tag-badge">{{ meal.category }}</span>

@@ -1,8 +1,9 @@
-import { Component, signal, Inject, PLATFORM_ID, OnInit, inject, ViewEncapsulation } from '@angular/core';
+import { Component, signal, Inject, PLATFORM_ID, OnInit, inject, ViewEncapsulation, computed } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CartStateService } from './features/cart/services/cart-state.service';
 import { MealsApiService, MealItem } from './features/meals/services/meals-api.service';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,13 @@ export class App implements OnInit {
 
   public readonly cart = inject(CartStateService);
   private readonly mealsApi = inject(MealsApiService);
+  public readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
+  public firstName = computed(() => {
+    const name = this.auth.currentUser()?.name;
+    return name ? name.split(' ')[0] : '';
+  });
 
   public meals = signal<MealItem[]>([]);
   public orderSuccess = signal<string | null>(null);
@@ -54,6 +62,17 @@ export class App implements OnInit {
   public updateCity(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input) this.city.set(input.value);
+  }
+
+  public logout() {
+    this.auth.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   public placeOrder() {

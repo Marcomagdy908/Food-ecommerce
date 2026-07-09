@@ -24,6 +24,15 @@ const OrderSchema = new Schema({
     type: String,
     enum: ['Paid', 'Unpaid'],
     default: 'Unpaid'
+  },
+  paymentMethod: {
+    type: String,
+    enum: ['Cash', 'Card'],
+    default: 'Cash'
+  },
+  transactionId: {
+    type: String,
+    required: false
   }
 }, { timestamps: true });
 

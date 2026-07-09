@@ -11,6 +11,8 @@ const UserSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true, index: true },
   passwordHash: { type: String, required: true },
+  avatarUrl: { type: String, required: false },
+  points: { type: Number, default: 0, required: true },
   savedAddresses: [AddressSchema]
 }, { timestamps: true });
 

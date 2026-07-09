@@ -1,61 +1,254 @@
-import { Component, inject } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { DecimalPipe, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { CartStateService } from '../../../cart/services/cart-state.service';
+import { AuthService, UserAddress } from '../../../../core/services/auth.service';
+import { MealsApiService } from '../../services/meals-api.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, DatePipe, FormsModule, RouterLink],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
+  public readonly auth = inject(AuthService);
   private readonly cart = inject(CartStateService);
+  private readonly mealsApi = inject(MealsApiService);
+  private readonly router = inject(Router);
 
-  // Profile data matching Alessandro Ricci from the Stitch mockup
-  public user = {
-    name: 'Alessandro Ricci',
-    email: 'alessandro.ricci@artisan-mail.com',
-    memberStatus: 'Gold Member',
-    joinedDate: 'Joined Jan 2023',
-    points: 850,
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBQbn6jopJ1farg2CRYtzpiyBi_IZAYfbsUyAxSK8Uh005PhhSEJdwS1jx2ISgSkLPsDLtiM2tMUB0XvHFhuMy7nPV1fXeeODxPdxkPHMUGKcnghwalCeAKZ0KzS99MJiNCe-pm8g-hqvJSt5zzMIqkUw4PqYEpzx5oIHyalptrsX-pkpqjLuPrLUlWcwsaN2SrJDl_LKnX7unyYIyqds5-WQso_2td0JweODPu9i31fPXtvV58KNI_fvUyCslWkUiJjjpxklUeEHA',
-    addresses: [
-      { type: 'Home', street: '124 Via San Carlo, Apt 4B', city: 'New York, NY 10014' },
-      { type: 'Studio', street: '88 Greenwich St, Floor 12', city: 'New York, NY 10006' }
-    ]
-  };
+  // Dynamic user data from service
+  public currentUser = this.auth.currentUser;
+  public authLoaded = this.auth.authLoaded;
 
-  // Recent order history items matching the mockup
-  public recentOrders = [
-    {
-      title: 'Margherita Verace',
-      description: 'Double Buffalo Mozzarella, Basil, Extra Virgin Olive Oil',
-      price: 18.50,
-      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAt1Esa3Xi0oxc0GTsY_L_MigPHTB71BuzyOc9Zqa4u8mIA8iAykc2GQhxGh0hYhiel1B2Pqj6UhC34m0PM4aM5G3Wzye7o5XlnOOgRHZwn8fHoWYLzvs3CE6ElFu1E6CE1moA00Iprk8wqlMa7qz1_hJ-1a540ampqQI6xCB2jX93Nl4TJyA0rjDO15bO6bojJ3Ixf9A_eCQJmCQnP6OYtB0-bP9h0qJNib5ZVQreT0ZmqmjOLQrr1KkDcYwz5bhypmSZnGGCKYQ0'
-    },
-    {
-      title: 'Diavola Arrabbiata',
-      description: 'Spicy Salami, Hot Honey, Peperoncino, Red Onion',
-      price: 21.00,
-      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDMXqVlRTuzYywih4CtUVnz2b7nemRITtReQCZJAG_U8L2m1XEdoVdLdmFqUskiUqWZPV5BIgJf6azFRyNl_3j8QEkGHqRqZzq8nrydlQOINqJ-qJQclBXON9DHLxVkl5Pt1Pbie8a_sH1XusuK_Lwn1rJbxSjvyCZZEvH_kI0_Zyubwd_6nZIc5kD8T3Ildc1hURVZnnEWAcaJvcP8bOnrldwTS_v6TjoO4IPxcWMTRX5Q3uo2amqGCTE2bfUFOlMsOCH7u80wbC0'
-    },
-    {
-      title: 'Pistacchio e Mortadella',
-      description: 'Ricotta Base, Mortadella Bologna, Pistachio Crumble',
-      price: 24.50,
-      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDYPMy_uSTkvGo7EHBEfTQODTEVFetWv7N7piG-4dlbCTx97YKELBera9IRUoHKxGSSjCgx6Gla3yeK9-zqRy8ktPg4m0VBRUxs9XX6FjxytYjvWx83whbtlOf0LNUnz1cOzH8FtN87lFS8mvgpSgKpNKi0K_Z1CEyUGYik7PZOZNVt2ybP2yNXd-VNZm61mlZEhLMzQYM9_JEVsynEC5jzbYgmqIkdTYH1l2prwEv28bpR4dVsvLDiHkcThMB9evugUZ-NcGaD2Ls'
-    }
+  // Real order history list
+  public recentOrders = signal<any[]>([]);
+
+  // Add Address form states
+  public isAddingAddress = signal<boolean>(false);
+  public newAddressLabel = '';
+  public newAddressStreet = '';
+  public newAddressCity = '';
+
+  // Account Settings / Profile Edit Form States
+  public isEditingProfile = signal<boolean>(false);
+  public isEditingAvatar = signal<boolean>(false);
+  public editName = '';
+  public editEmail = '';
+  public editAvatarUrl = '';
+  public selectedFileName = '';
+  public profileErrorMessage = signal<string | null>(null);
+
+  // NAPOLI rewards info
+  public points = computed(() => this.currentUser()?.points ?? 0);
+  public progressToReward = computed(() => {
+    const pts = this.points();
+    return Math.min(100, (pts / 1000) * 100);
+  });
+  public activeRewardCode = signal<string | null>(null);
+
+  // Pre-configured elegant avatar presets to make editing photo easy
+  public readonly avatarPresets = [
+    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&q=80'
   ];
 
-  public reorder(order: { title: string, price: number, imageUrl?: string }) {
-    // Generate a temporary ID format for cart items
-    const mealId = 'temp-' + order.title.toLowerCase().replace(/ /g, '-');
-    this.cart.addMeal(mealId, order.title, order.price, order.imageUrl);
-    alert(`${order.title} added to your basket!`);
+  ngOnInit() {
+    if (this.auth.isAuthenticated()) {
+      this.loadOrderHistory();
+    }
+  }
+
+  public loadOrderHistory() {
+    this.mealsApi.getMyOrders().subscribe({
+      next: (orders) => {
+        this.recentOrders.set(orders);
+      },
+      error: (err) => console.error('Failed to load order history:', err)
+    });
+  }
+
+  public toggleAddAddress() {
+    this.isAddingAddress.update(val => !val);
+    // Clear inputs
+    this.newAddressLabel = '';
+    this.newAddressStreet = '';
+    this.newAddressCity = '';
+  }
+
+  public saveAddress() {
+    if (!this.newAddressLabel || !this.newAddressStreet || !this.newAddressCity) {
+      alert('Please fill out all address fields.');
+      return;
+    }
+
+    const currentAddresses = this.currentUser()?.savedAddresses || [];
+    const updated = [
+      ...currentAddresses,
+      {
+        label: this.newAddressLabel,
+        street: this.newAddressStreet,
+        city: this.newAddressCity
+      }
+    ];
+
+    this.auth.updateAddresses(updated).subscribe({
+      next: () => {
+        this.toggleAddAddress();
+      },
+      error: (err) => {
+        console.error('Failed to save address:', err);
+        alert('Could not save address. Please try again.');
+      }
+    });
+  }
+
+  public deleteAddress(index: number) {
+    const currentAddresses = this.currentUser()?.savedAddresses || [];
+    const updated = currentAddresses.filter((_, i) => i !== index);
+
+    if (confirm('Are you sure you want to delete this address?')) {
+      this.auth.updateAddresses(updated).subscribe({
+        error: (err) => {
+          console.error('Failed to delete address:', err);
+          alert('Could not delete address.');
+        }
+      });
+    }
+  }
+
+  // Edit Profile Info
+  public toggleEditProfile() {
+    const user = this.currentUser();
+    if (user) {
+      this.editName = user.name;
+      this.editEmail = user.email;
+      this.editAvatarUrl = user.avatarUrl || '';
+    }
+    this.profileErrorMessage.set(null);
+    this.isEditingProfile.update(val => !val);
+  }
+
+  public saveProfile() {
+    if (!this.editName || !this.editEmail) {
+      this.profileErrorMessage.set('Name and Email are required.');
+      return;
+    }
+
+    this.profileErrorMessage.set(null);
+    this.auth.updateProfile({
+      name: this.editName,
+      email: this.editEmail,
+      avatarUrl: this.editAvatarUrl
+    }).subscribe({
+      next: () => {
+        this.isEditingProfile.set(false);
+        alert('Profile information updated successfully!');
+      },
+      error: (err) => {
+        console.error('Failed to update profile:', err);
+        this.profileErrorMessage.set(err.error?.message || 'Failed to save changes. Email might be in use.');
+      }
+    });
+  }
+
+  // Edit Avatar Photo
+  public toggleEditAvatar() {
+    const user = this.currentUser();
+    if (user) {
+      this.editAvatarUrl = user.avatarUrl || '';
+    }
+    this.selectedFileName = '';
+    this.isEditingAvatar.update(val => !val);
+  }
+
+  public onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        this.triggerAlert('Profile photo size must be smaller than 2MB.');
+        return;
+      }
+      this.selectedFileName = file.name;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.editAvatarUrl = reader.result as string; // Base64 Data URL
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  public selectPresetAvatar(url: string) {
+    this.editAvatarUrl = url;
+  }
+
+  public saveAvatar() {
+    const user = this.currentUser();
+    if (!user) return;
+
+    this.auth.updateProfile({
+      name: user.name,
+      email: user.email,
+      avatarUrl: this.editAvatarUrl
+    }).subscribe({
+      next: () => {
+        this.isEditingAvatar.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to update profile photo:', err);
+        alert('Could not save profile picture.');
+      }
+    });
+  }
+
+  // Redeem Rewards
+  public redeemRewards() {
+    if (this.points() < 1000) {
+      alert('You need at least 1,000 points to redeem a reward.');
+      return;
+    }
+
+    if (confirm('Redeem 1,000 points for a free Wood-Fired Appetizer or Dessert?')) {
+      this.auth.adjustPoints(-1000).subscribe({
+        next: () => {
+          // Generate a mockup voucher code
+          const voucher = 'NAPOLI-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+          this.activeRewardCode.set(voucher);
+        },
+        error: (err) => {
+          console.error('Redemption failed:', err);
+          alert('Redemption failed: ' + (err.error?.message || err.message));
+        }
+      });
+    }
+  }
+
+  public triggerAlert(message: string) {
+    if (typeof window !== 'undefined') {
+      window.alert(message);
+    }
+  }
+
+  public reorder(order: any) {
+    if (!order.items || order.items.length === 0) return;
+    
+    order.items.forEach((item: any) => {
+      const mealId = item.mealId || 'temp-' + item.title.toLowerCase().replace(/ /g, '-');
+      this.cart.addMeal(mealId, item.title, item.priceAtPurchase || item.price, '');
+    });
+    this.triggerAlert(`Items from order placed in your basket!`);
+    this.router.navigate(['/order']);
   }
 
   public logout() {
-    alert('Logging out of Alessandro Ricci...');
+    this.auth.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      }
+    });
   }
 }

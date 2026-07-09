@@ -22,6 +22,8 @@ export interface PlaceOrderPayload {
     street: string;
     city: string;
   };
+  paymentMethod?: string;
+  transactionId?: string;
 }
 
 @Injectable({
@@ -35,7 +37,15 @@ export class MealsApiService {
     return this.http.get<MealItem[]>(`${this.apiUrl}/meals`);
   }
 
+  public getMealById(id: string): Observable<MealItem> {
+    return this.http.get<MealItem>(`${this.apiUrl}/meals/${id}`);
+  }
+
   public placeOrder(orderPayload: PlaceOrderPayload): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/orders`, orderPayload);
+  }
+
+  public getMyOrders(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/orders/my`);
   }
 }
