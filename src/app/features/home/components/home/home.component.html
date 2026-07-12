@@ -1,4 +1,4 @@
-<!-- Floating 3D Pizza Canvas overlay (Home page only) -->
+<!-- Floating 3D Pizza Canvas overlay (Home page only, desktop only hidden on mobile via CSS) -->
 <div class="pizza-viewport">
   <app-pizza-canvas></app-pizza-canvas>
 </div>
@@ -20,7 +20,7 @@
         <div class="hero-cta-group">
           <div class="cta-group">
             <a routerLink="/menu" class="btn btn-primary btn-lg">Explore Our Menu</a>
-            <a routerLink="/order" class="btn btn-secondary btn-lg">Order Now</a>
+            <a routerLink="/order" class="btn btn-secondary btn-lg">Order Online</a>
           </div>
           <div class="hero-stats">
             <div class="stat">
@@ -90,10 +90,9 @@
           <h2>Crafted with<br>Purpose &amp; Pride.</h2>
         </div>
         <p class="ingredients-desc">
-          Six non-negotiable commitments that live in every pie we pull from the oven —
+          Six commitments that live in every pie we pull from the oven —
           no shortcuts, no compromises.
         </p>
-
       </div>
       <!-- Right side is reserved for the zoomed-in rotated Pizza -->
       <div class="ingredients-visual-spacer"></div>
@@ -146,3 +145,138 @@
   </section>
 
 </div>
+
+<!-- NEW SECTIONS: Placed outside the pinned scroll-container so they scroll naturally on desktop -->
+
+<!-- SECTION 5: Our Featured Menu (Dynamic & Orderable) -->
+<section id="featured-menu" class="section-featured-menu">
+  <div class="featured-header">
+    <span class="badge-accent"><i class="fa-solid fa-fire-flame-curved"></i> FRESH OUT OF THE OVEN</span>
+    <h2>Customer Favorites</h2>
+    <p class="featured-intro">Hand-stretched, stone-baked, and loaded with the finest ingredients. Order directly from the landing page!</p>
+  </div>
+
+  <div class="featured-grid">
+    @for (meal of meals().slice(0, 3); track meal._id) {
+      <div class="featured-meal-card">
+        <div class="card-image-wrapper">
+          <img [src]="meal.imageUrl || 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600&auto=format&fit=crop'" [alt]="meal.title" class="meal-card-img" />
+          <span class="meal-card-price">${{ meal.price | number:'1.2-2' }}</span>
+        </div>
+        <div class="card-details">
+          <h3 class="meal-card-title">{{ meal.title }}</h3>
+          <p class="meal-card-desc">{{ meal.description }}</p>
+          <div class="card-actions">
+            <button (click)="addToCart(meal)" class="btn btn-primary btn-block">Add to Order <i class="fa-solid fa-bag-shopping" style="margin-left: 8px;"></i></button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- SECTION 6: Napoli Rewards Loyalty Banner -->
+<section id="rewards" class="rewards-banner-section">
+  <div class="rewards-banner-card">
+    <div class="rewards-banner-content">
+      <span class="rewards-badge">NAPOLI REWARDS</span>
+      <h2>Earn Free Pizza with Every Order</h2>
+      <p>Sign up now to get 10 points for every dollar spent. Redeem your points for free artisanal pizzas, signature sides, and premium desserts.</p>
+      <div class="rewards-banner-actions">
+        <a routerLink="/signup" class="btn btn-primary">Join Rewards Program</a>
+        <a routerLink="/login" class="btn btn-secondary">Login to Account</a>
+      </div>
+    </div>
+    <div class="rewards-banner-graphic">
+      <div class="points-circle">
+        <span class="points-num">100</span>
+        <span class="points-lbl">POINTS = FREE PIE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: Customer Testimonials -->
+<section id="testimonials" class="testimonials-section">
+  <div class="testimonials-header">
+    <span class="badge-accent"><i class="fa-regular fa-comment-dots"></i> THE PIZZA DIARIES</span>
+    <h2>What Our Customers Say</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+      <p class="testimonial-quote">"The best Neapolitan pizza I've had outside of Naples. The leopard-spotted crust is absolutely perfect, and the ingredients are fresh."</p>
+      <span class="testimonial-author">— Alessandro Rossi</span>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+      <p class="testimonial-quote">"Super fast delivery! The pizza arrived piping hot inside an eco-friendly box. Ordering in Zamalek has never been easier."</p>
+      <span class="testimonial-author">— Fatma Mansour</span>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+      <p class="testimonial-quote">"Authentic Caputo flour, sweet San Marzano tomatoes, and organic mozzarella. You can tell they put true pride in their food."</p>
+      <span class="testimonial-author">— Johnathan Miller</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="app-footer">
+  <div class="footer-grid">
+    <div class="footer-info">
+      <span class="footer-logo">Bella Napoli</span>
+      <p>Premium wood-fired artisanal pizza, hand-stretched and cooked to Neapolitan standards.</p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a routerLink="">Home</a></li>
+        <li><a routerLink="/menu">Menu</a></li>
+        <li><a routerLink="/order">Order Online</a></li>
+        <li><a routerLink="/profile">Profile</a></li>
+      </ul>
+    </div>
+    <div class="footer-hours">
+      <h4>Opening Hours</h4>
+      <ul>
+        <li>Monday - Friday: 11:00 AM - 11:00 PM</li>
+        <li>Saturday - Sunday: 12:00 PM - 12:00 AM</li>
+      </ul>
+    </div>
+    <div class="footer-contact">
+      <h4>Contact Us</h4>
+      <ul>
+        <li><i class="fa-solid fa-phone"></i> +20 123 456 7890</li>
+        <li><i class="fa-solid fa-envelope"></i> ciao@bellanapoli.com</li>
+        <li><i class="fa-solid fa-location-dot"></i> Zamalek, Cairo, Egypt</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Bella Napoli. Crafted with purpose and pride. All rights reserved.</p>
+  </div>
+</footer>

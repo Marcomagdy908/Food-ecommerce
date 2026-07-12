@@ -867,12 +867,13 @@
   }
 
   .profile-bento-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2.5rem;
   }
 
   .bento-col-left, .bento-col-right {
-    grid-column: span 12 / span 12;
+    width: 100%;
   }
 }
 
@@ -958,3 +959,41 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@media (max-width: 480px) {
+  .profile-page-container {
+    padding: 80px 4% 40px 4%;
+  }
+
+  .user-name {
+    font-size: 2rem;
+  }
+
+  .avatar-ring {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bento-module-card {
+    padding: 1.5rem;
+  }
+
+  .address-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rewards-card {
+    padding: 1.5rem;
+  }
+
+  .orders-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .edit-profile-modal-card {
+    padding: 1.5rem;
+    width: 95% !important;
+  }
+}
+

@@ -20,6 +20,7 @@ export class AdminComponent implements OnInit {
   // UI Tabs State
   public activeTab = signal<string>('overview');
   public feedbackMessage = signal<string | null>(null);
+  public orderStatusFeedback = signal<Record<string, { message: string, isError: boolean }>>({});
 
   // Data Stores
   public orders = signal<any[]>([]);
@@ -71,6 +72,17 @@ export class AdminComponent implements OnInit {
 
   public changeTab(tabName: string) {
     this.activeTab.set(tabName);
+  }
+
+  public logout() {
+    this.auth.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   public loadAllData() {
@@ -169,12 +181,36 @@ export class AdminComponent implements OnInit {
 
     this.mealsApi.updateOrderStatus(orderId, newStatus).subscribe({
       next: () => {
-        this.feedbackMessage.set(`Order status updated to ${newStatus}`);
+        this.orderStatusFeedback.update(prev => ({
+          ...prev,
+          [orderId]: { message: `Updated to ${newStatus}`, isError: false }
+        }));
+        
+        setTimeout(() => {
+          this.orderStatusFeedback.update(prev => {
+            const next = { ...prev };
+            delete next[orderId];
+            return next;
+          });
+        }, 3000);
+
         this.loadAllData();
       },
       error: (err) => {
         console.error('Failed to update status:', err);
-        this.feedbackMessage.set('Could not update status: ' + (err.error?.message || err.message));
+        const errMsg = err.error?.message || err.message || 'Error updating';
+        this.orderStatusFeedback.update(prev => ({
+          ...prev,
+          [orderId]: { message: errMsg, isError: true }
+        }));
+
+        setTimeout(() => {
+          this.orderStatusFeedback.update(prev => {
+            const next = { ...prev };
+            delete next[orderId];
+            return next;
+          });
+        }, 5000);
       }
     });
   }

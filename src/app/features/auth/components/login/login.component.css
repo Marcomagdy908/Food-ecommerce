@@ -220,5 +220,22 @@
 @media (max-width: 480px) {
   .auth-card {
     padding: 2.25rem 1.5rem;
+    margin: 0 1rem;
+  }
+
+  .auth-card h2 {
+    font-size: 2rem;
+  }
+
+  .auth-input {
+    padding: 0.85rem 1rem;
+    min-height: 48px;
+    font-size: 1rem;
+  }
+
+  .auth-submit-btn {
+    min-height: 48px;
+    font-size: 1rem;
   }
 }
+

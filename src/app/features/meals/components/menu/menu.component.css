@@ -327,3 +327,42 @@
   }
 }
 
+@media (max-width: 480px) {
+  .menu-page-container {
+    padding: 80px 4% 40px 4%;
+  }
+
+  .menu-header h2 {
+    font-size: 2rem;
+  }
+
+  .menu-header p {
+    font-size: 0.95rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .categories-slider-row {
+    gap: 1rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category-card {
+    flex: 0 0 150px;
+  }
+
+  .category-name {
+    font-size: 0.95rem;
+  }
+
+  .meal-card-header {
+    padding: 1.25rem;
+  }
+
+  .meal-price-tag {
+    font-size: 1.1rem;
+  }
+}
+

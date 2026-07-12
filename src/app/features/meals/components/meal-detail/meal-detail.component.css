@@ -678,20 +678,23 @@
   }
 
   .detail-hero-section {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2.5rem;
   }
 
   .hero-image-wrapper, .hero-text-col {
-    grid-column: span 12 / span 12;
+    width: 100%;
   }
 
   .customization-bento-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
   .bento-customization-options, .bento-summary-sidebar {
-    grid-column: span 12 / span 12;
+    width: 100%;
   }
 
   .summary-floating-card {
@@ -699,12 +702,13 @@
   }
 
   .detail-story-section {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2.5rem;
   }
 
   .story-image-col, .story-text-col {
-    grid-column: span 12 / span 12;
+    width: 100%;
   }
 
   .story-text-col {
@@ -712,7 +716,8 @@
   }
 
   .detail-nutrition-pairings {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 3rem;
   }
 }
@@ -740,3 +745,34 @@
     opacity: 1;
   }
 }
+
+@media (max-width: 480px) {
+  .meal-detail-container {
+    padding: 80px 4% 40px 4%;
+  }
+
+  .detail-title {
+    font-size: 2rem;
+  }
+
+  .hero-image-wrapper {
+    max-height: 280px;
+  }
+
+  .summary-floating-card {
+    padding: 1.5rem;
+  }
+
+  .customization-card {
+    padding: 1.5rem;
+  }
+
+  .detail-story-section {
+    gap: 1.5rem;
+  }
+
+  .story-text-col h3 {
+    font-size: 1.5rem;
+  }
+}
+

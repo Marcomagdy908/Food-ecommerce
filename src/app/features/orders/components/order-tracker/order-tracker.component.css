@@ -554,12 +554,13 @@
   }
 
   .tracker-grid-container {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2.5rem;
   }
 
   .tracker-col-steps, .tracker-col-map {
-    grid-column: span 12 / span 12;
+    width: 100%;
   }
 
   .tracker-col-map {
@@ -568,11 +569,13 @@
   }
 
   .tracker-summary-support-section {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
   .summary-card, .support-card {
-    grid-column: span 12 / span 12;
+    width: 100%;
   }
 }
 
@@ -588,3 +591,27 @@
     padding: 1rem 1.5rem;
   }
 }
+
+@media (max-width: 480px) {
+  .order-tracker-page {
+    padding: 80px 4% 40px 4%;
+  }
+
+  .tracker-col-map {
+    height: 280px;
+    min-height: 280px;
+  }
+
+  .tracker-order-title {
+    font-size: 2rem;
+  }
+
+  .step-card {
+    padding: 1rem;
+  }
+
+  .summary-card, .support-card {
+    padding: 1.5rem;
+  }
+}
+

@@ -1,6 +1,6 @@
-import { Component, signal, Inject, PLATFORM_ID, OnInit, inject, ViewEncapsulation, computed } from '@angular/core';
+import { Component, signal, Inject, PLATFORM_ID, OnInit, inject, ViewEncapsulation, computed, effect } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { CartStateService } from './features/cart/services/cart-state.service';
 import { MealsApiService, MealItem } from './features/meals/services/meals-api.service';
 import { AuthService } from './core/services/auth.service';
@@ -21,6 +21,8 @@ export class App implements OnInit {
   public readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
+  public mobileMenuOpen = signal<boolean>(false);
+
   public firstName = computed(() => {
     const name = this.auth.currentUser()?.name;
     return name ? name.split(' ')[0] : '';
@@ -30,6 +32,10 @@ export class App implements OnInit {
     return !this.router.url.includes('/admin');
   }
 
+  public toggleMobileMenu() {
+    this.mobileMenuOpen.update(v => !v);
+  }
+
   public meals = signal<MealItem[]>([]);
   public orderSuccess = signal<string | null>(null);
 
@@ -37,7 +43,16 @@ export class App implements OnInit {
   public street = signal('');
   public city = signal('Cairo');
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    if (isPlatformBrowser(this.platformId)) {
+      effect(() => {
+        const user = this.auth.currentUser();
+        if (user && user.role === 'admin' && !this.router.url.startsWith('/admin')) {
+          this.router.navigate(['/admin']);
+        }
+      });
+    }
+  }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -46,6 +61,17 @@ export class App implements OnInit {
           this.meals.set(data);
         },
         error: (err) => console.error('Failed to fetch meals:', err)
+      });
+
+      this.router.events.subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          const user = this.auth.currentUser();
+          if (user && user.role === 'admin' && !this.router.url.startsWith('/admin')) {
+            this.router.navigate(['/admin']);
+          }
+          // Auto-close mobile menu on navigation
+          this.mobileMenuOpen.set(false);
+        }
       });
     }
   }
@@ -74,6 +100,7 @@ export class App implements OnInit {
         this.router.navigate(['/login']);
       },
       error: () => {
+
         this.router.navigate(['/login']);
       }
     });

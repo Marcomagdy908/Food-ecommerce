@@ -4,5 +4,48 @@ html, body {
   padding: 0;
   background-color: var(--bg-dark);
   color: var(--text-white);
+  overflow-x: hidden;
+}
+
+/* Pre-hide all animated sub-elements to prevent flash before GSAP initializes on desktop */
+.hero-text .hero-desc,
+.hero-text .cta-group,
+.hero-text .hero-stats,
+.craft-text .badge,
+.craft-text h2,
+.craft-text .craft-desc,
+.craft-text .features-list,
+.ingredients-text .badge,
+.ingredients-text h2,
+.ingredients-text .ingredients-desc,
+.ingredients-text .ingredients-grid,
+.ing-card,
+.order-form-container,
+.order-form-container>*,
+.order-graphic-container {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Force elements to be fully visible on mobile/tablet viewports (≤1024px) where GSAP is disabled */
+@media (max-width: 1024px) {
+  .hero-text .hero-desc,
+  .hero-text .cta-group,
+  .hero-text .hero-stats,
+  .craft-text .badge,
+  .craft-text h2,
+  .craft-text .craft-desc,
+  .craft-text .features-list,
+  .ingredients-text .badge,
+  .ingredients-text h2,
+  .ingredients-text .ingredients-desc,
+  .ingredients-text .ingredients-grid,
+  .ing-card,
+  .order-form-container,
+  .order-form-container>*,
+  .order-graphic-container {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
 }
 

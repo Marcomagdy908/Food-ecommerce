@@ -1,17 +1,18 @@
-import { Component, OnInit, AfterViewInit, inject, PLATFORM_ID, HostListener } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, signal, OnInit, AfterViewInit, inject, PLATFORM_ID, HostListener } from '@angular/core';
+import { isPlatformBrowser, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
 import { PizzaStateService } from '../../../meals/services/pizza-state.service';
 import { CartStateService } from '../../../cart/services/cart-state.service';
+import { MealsApiService, MealItem } from '../../../meals/services/meals-api.service';
 import { PizzaCanvasComponent } from '../../../meals/components/pizza-canvas/pizza-canvas.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, PizzaCanvasComponent],
+  imports: [RouterLink, PizzaCanvasComponent, DecimalPipe],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -19,11 +20,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly pizzaState = inject(PizzaStateService);
   public readonly cart = inject(CartStateService);
+  private readonly mealsApi = inject(MealsApiService);
 
+  public meals = signal<MealItem[]>([]);
   public scrollProgress = 0;
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
+      this.mealsApi.getMeals().subscribe({
+        next: (data) => this.meals.set(data),
+        error: (err) => console.error('Failed to fetch meals in Home:', err)
+      });
+
       setTimeout(() => {
         const canvas = this.pizzaState.pizzaCanvas;
         if (canvas) {
@@ -110,6 +118,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const pizzaCanvas = this.pizzaState.pizzaCanvas;
     if (!pizzaCanvas || !pizzaCanvas.pizzaGroup) return;
 
+    const isDesktop = isPlatformBrowser(this.platformId) && window.innerWidth > 1024;
+    if (!isDesktop) {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      return;
+    }
+
     const pizza = pizzaCanvas.pizzaGroup;
 
     // Clean up previous ScrollTrigger
@@ -124,7 +138,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.scrollProgress = 0;
     this.updatePizzaPosition();
 
-    const isDesktop = isPlatformBrowser(this.platformId) && window.innerWidth > 1024;
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -291,6 +304,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }, 15.9)
       .to('.order-graphic-container', {
         autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out'
-      }, 15.9);
+      }, 15.9)
+      .to('.pizza-viewport', {
+        autoAlpha: 0, duration: 0.5
+      }, 17.5);
+  }
+
+  public addToCart(meal: MealItem) {
+    this.cart.addMeal(meal._id, meal.title, meal.price, meal.imageUrl);
   }
 }
+
