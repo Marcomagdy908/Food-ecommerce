@@ -1,59 +1,64 @@
-# FoodEcommerce
+# 🍕 Bella Napoli - Premium Artisanal Pizza Storefront
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.18.
+Bella Napoli is a premium, full-stack food e-commerce application featuring a modern, interactive storefront for artisanal pizza ordering, a live delivery tracker with real-time map simulation, and an administrator dashboard.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🛠️ Technology Stack
 
-```bash
-ng serve
-```
+- **Frontend**: Angular 21, Signals, SSR (Server-Side Rendering), Leaflet.js Maps, Vanilla CSS (rich custom themes)
+- **Backend**: Node.js, Express.js (Modular Controllers and API Routes)
+- **Database**: MongoDB via Mongoose (Schemas for Users, Meals, Orders, and Error Logs)
+- **Security**: JWT-based session authentication set via secure HTTP-Only cookies
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## ✨ Features
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Dynamic Storefront**: Browse authentic Italian pizzas, pastas, desserts, and fresh drinks.
+- **Custom Pizza Configurator**: Customize pizza size, dough types, and extra toppings with real-time price updates.
+- **Secured Checkout**: Checkout is secured to authenticated users only. Unauthenticated users are redirected to login with automatic return redirects.
+- **Live Order Tracking**: An interactive map powered by Leaflet.js tracks real-time status updates from the kitchen, to oven, en route, and final delivery.
+- **Admin Dashboard**: Secure management interface to view system logs and monitor overall order status.
+- **Napoli Rewards**: Loyalty system awarding points for successfully completed orders.
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🚀 Getting Started
 
-```bash
-ng generate --help
-```
+### 📋 Prerequisites
 
-## Building
+Ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [MongoDB](https://www.mongodb.com/) (running locally or access to a MongoDB Atlas cluster)
 
-To build the project run:
+### 🔧 Installation & Setup
 
-```bash
-ng build
-```
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+2. **Configure Database Connection** (Optional):
+   By default, the server connects to a local MongoDB instance at `mongodb://127.0.0.1:27017/slicecraft`. You can override this using the `MONGODB_URI` environment variable.
 
-## Running unit tests
+3. **Seed Database**:
+   Populate your database with authentic Italian meals, dummy users, and sample orders:
+   ```bash
+   npm run db:seed
+   ```
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+4. **Start Development Server**:
+   ```bash
+   npm run dev
+   ```
+   Open your browser and navigate to **`http://localhost:4200/`**. The dev server proxies API calls to the Express server running behind the scenes.
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## 📜 Available Scripts
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **`npm run dev` / `npm start`**: Runs the Angular development server.
+- **`npm run build`**: Compiles the client browser and server SSR bundles into the `dist/` directory.
+- **`npm run db:seed`**: Clears and seeds the MongoDB database with initial sample data.
+- **`npm run test`**: Runs unit tests using the configured test runner.

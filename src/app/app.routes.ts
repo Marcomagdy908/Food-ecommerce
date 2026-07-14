@@ -1,4 +1,6 @@
-import { Routes } from '@angular/router';
+import { Routes, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { inject } from '@angular/core';
+import { AuthService } from './core/services/auth.service';
 import { HomeComponent } from './features/home/components/home/home.component';
 import { MenuComponent } from './features/meals/components/menu/menu.component';
 import { OrderComponent } from './features/orders/components/order/order.component';
@@ -9,11 +11,20 @@ import { MealDetailComponent } from './features/meals/components/meal-detail/mea
 import { OrderTrackerComponent } from './features/orders/components/order-tracker/order-tracker.component';
 import { AdminComponent } from './features/admin/components/admin/admin.component';
 
+const authGuard = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  if (authService.isAuthenticated()) {
+    return true;
+  }
+  return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
+};
+
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'menu', component: MenuComponent },
-  { path: 'order', component: OrderComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'order', component: OrderComponent, canActivate: [authGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'meals/:id', component: MealDetailComponent },
@@ -21,3 +32,4 @@ export const routes: Routes = [
   { path: 'admin', component: AdminComponent },
   { path: '**', redirectTo: '' }
 ];
+

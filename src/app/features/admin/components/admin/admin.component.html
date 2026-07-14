@@ -2,7 +2,10 @@
   
   <!-- Side Tab Navigation Links -->
   <aside class="admin-sidebar">
-    <div class="admin-brand-title">Bella Napoli Console</div>
+    <div class="admin-brand-title" style="display: flex; align-items: center; gap: 0.5rem; justify-content: center; padding: 0.5rem 0;">
+      <img src="/assets/Gemini_Generated_Image_bn02zjbn02zjbn02-removebg-preview.png" alt="Bella Napoli Logo" style="height: 28px; width: auto; object-fit: contain;" />
+      <span>Bella Napoli Console</span>
+    </div>
     <nav class="sidebar-links">
       <button class="nav-btn" [class.active]="activeTab() === 'overview'" (click)="changeTab('overview')">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">

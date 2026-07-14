@@ -1,8 +1,9 @@
 <!-- Navigation Header -->
 @if (showNavbar()) {
   <header class="navbar">
-    <div class="logo" routerLink="" style="cursor: pointer;">
-      Bella Napoli
+    <div class="logo" routerLink="" style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+      <img src="/assets/Gemini_Generated_Image_bn02zjbn02zjbn02-removebg-preview.png" alt="Bella Napoli Logo" style="height: 38px; width: auto; object-fit: contain;" />
+      <span style="font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px;">Bella Napoli</span>
     </div>
     <nav class="nav-links">
       <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
@@ -48,7 +49,8 @@
   @if (mobileMenuOpen()) {
     <div class="mobile-drawer-overlay" (click)="toggleMobileMenu()"></div>
     <nav class="mobile-drawer">
-      <div class="mobile-drawer-header">
+      <div class="mobile-drawer-header" style="display: flex; align-items: center; gap: 0.5rem;">
+        <img src="/assets/Gemini_Generated_Image_bn02zjbn02zjbn02-removebg-preview.png" alt="Bella Napoli Logo" style="height: 32px; width: auto; object-fit: contain;" />
         <span class="mobile-drawer-brand">Bella Napoli</span>
       </div>
       <div class="mobile-drawer-links">

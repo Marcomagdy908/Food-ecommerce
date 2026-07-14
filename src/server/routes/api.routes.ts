@@ -25,7 +25,7 @@ router.get('/meals/:id', getMealById);
 router.post('/meals', requireAdmin, createMeal); // Protected: Admins only
 
 // Order Routes
-router.post('/orders', createOrder); // Optional authentication, handled in controller
+router.post('/orders', requireAuth, createOrder); // Protected: users only
 router.get('/orders/my', requireAuth, getMyOrders); // Protected, user specific orders
 router.get('/orders/:id', getOrderById); // Open tracker/details page
 router.put('/orders/:id/status', requireAdmin, updateOrderStatus); // Protected: Admins only status updates

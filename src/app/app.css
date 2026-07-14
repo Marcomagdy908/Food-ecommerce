@@ -806,6 +806,14 @@ p {
    NEW LANDING PAGE COMPONENTS
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Hide new mobile landing components on desktop by default */
+.section-featured-menu,
+.rewards-banner-section,
+.testimonials-section,
+.app-footer {
+  display: none !important;
+}
+
 /* Section Featured Favorites */
 .section-featured-menu {
   padding: 100px 8%;
@@ -1419,6 +1427,13 @@ p {
     gap: 2.5rem;
   }
 
+  /* Display new mobile landing components only on mobile/tablet screens */
+  .section-featured-menu,
+  .rewards-banner-section,
+  .testimonials-section,
+  .app-footer {
+    display: block !important;
+  }
 }
 
 /* ─── Large Phones / Small Tablets (≤768px) ──────────────────────────────── */

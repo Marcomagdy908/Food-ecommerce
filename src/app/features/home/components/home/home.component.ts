@@ -304,10 +304,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }, 15.9)
       .to('.order-graphic-container', {
         autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out'
-      }, 15.9)
-      .to('.pizza-viewport', {
-        autoAlpha: 0, duration: 0.5
-      }, 17.5);
+      }, 15.9);
   }
 
   public addToCart(meal: MealItem) {

@@ -2,19 +2,14 @@ import { pbkdf2Sync, randomBytes, createHmac } from 'node:crypto';
 
 const JWT_SECRET = process.env['JWT_SECRET'] || 'slicecraft-super-secret-key-12345';
 
-/**
- * Hashes a plain text password using PBKDF2 with a randomly generated salt.
- * Returns the salt and hash combined, separated by a colon.
- */
+
 export function hashPassword(password: string): string {
   const salt = randomBytes(16).toString('hex');
   const hash = pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
   return `${salt}:${hash}`;
 }
 
-/**
- * Verifies a plain text password against a stored salt-colon-hash string.
- */
+
 export function verifyPassword(password: string, storedHash: string): boolean {
   const parts = storedHash.split(':');
   if (parts.length !== 2) return false;
@@ -23,9 +18,7 @@ export function verifyPassword(password: string, storedHash: string): boolean {
   return hash === verifyHash;
 }
 
-/**
- * Creates a signed JWT-compatible token (HS256) containing the payload.
- */
+
 export function signToken(payload: object): string {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
   const body = Buffer.from(JSON.stringify({
@@ -41,10 +34,7 @@ export function signToken(payload: object): string {
   return `${header}.${body}.${signature}`;
 }
 
-/**
- * Verifies a JWT token (HS256) and returns its parsed payload.
- * Returns null if the token is invalid or expired.
- */
+
 export function verifyToken(token: string): any {
   try {
     const parts = token.split('.');
@@ -60,7 +50,6 @@ export function verifyToken(token: string): any {
 
     const payload = JSON.parse(Buffer.from(body, 'base64url').toString('utf8'));
     
-    // Check expiration
     if (payload.exp && Date.now() / 1000 > payload.exp) {
       return null;
     }

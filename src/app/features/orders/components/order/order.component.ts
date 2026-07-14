@@ -56,17 +56,10 @@ export class OrderComponent implements OnInit {
       this.street.set(defaultAddr.street);
       this.city.set(defaultAddr.city);
     } else {
-      if (user) {
-        // Authenticated but no saved addresses -> Default to custom form with empty street
-        this.selectedAddress.set('Custom');
-        this.street.set('');
-        this.city.set('Cairo');
-      } else {
-        // Guest -> Default to guest mockup address
-        this.selectedAddress.set('Guest');
-        this.street.set('Zamalek, Cairo');
-        this.city.set('Cairo');
-      }
+      // Authenticated but no saved addresses -> Default to custom form with empty street
+      this.selectedAddress.set('Custom');
+      this.street.set('');
+      this.city.set('Cairo');
     }
   }
 
