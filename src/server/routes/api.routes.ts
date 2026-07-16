@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getMeals, getMealById, createMeal } from '../controllers/meal.controller';
 import { createOrder, getOrders, getMyOrders, getOrderById, updateOrderStatus } from '../controllers/order.controller';
-import { signup, login, logout, getMe, updateAddresses, updateProfile, adjustPoints } from '../controllers/auth.controller';
+import { signup, login, logout, getMe, updateAddresses, updateProfile, adjustPoints, getAllUsers, updateUserRole, deleteUser } from '../controllers/auth.controller';
 import { logClientError, getErrorLogs } from '../controllers/error.controller';
 import { authenticate, requireAuth, requireAdmin } from '../middleware/auth.middleware';
 
@@ -18,6 +18,12 @@ router.get('/auth/me', requireAuth, getMe);
 router.put('/auth/profile', requireAuth, updateProfile);
 router.put('/auth/addresses', requireAuth, updateAddresses);
 router.post('/auth/points', requireAuth, adjustPoints);
+
+// User Management Routes (Admins only)
+router.get('/users', requireAdmin, getAllUsers);
+router.put('/users/:id/role', requireAdmin, updateUserRole);
+router.delete('/users/:id', requireAdmin, deleteUser);
+
 
 // Meal Routes
 router.get('/meals', getMeals);

@@ -2,8 +2,10 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MealsApiService } from '../../../meals/services/meals-api.service';
+import { UsersApiService } from '../../../../core/services/users-api.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
+import { Observer } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -14,6 +16,7 @@ import { Router } from '@angular/router';
 })
 export class AdminComponent implements OnInit {
   private readonly mealsApi = inject(MealsApiService);
+  private readonly usersApi = inject(UsersApiService);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -26,6 +29,7 @@ export class AdminComponent implements OnInit {
   public orders = signal<any[]>([]);
   public meals = signal<any[]>([]);
   public errorLogs = signal<any[]>([]);
+  public users = signal<any[]>([]);
   public isLoading = signal<boolean>(true);
 
   // New Meal Form States
@@ -87,36 +91,68 @@ export class AdminComponent implements OnInit {
 
   public loadAllData() {
     this.isLoading.set(true);
-    this.mealsApi.getAllOrders().subscribe({
+    let loadedCount = 0;
+    const totalToLoad = 4;
+    
+    const checkFinish = () => {
+      loadedCount++;
+      if (loadedCount === totalToLoad) {
+        this.isLoading.set(false);
+      }
+    };
+
+    const ordersObserver: Observer<any[]> = {
       next: (ordersData) => {
         this.orders.set(ordersData);
-        
-        this.mealsApi.getMeals().subscribe({
-          next: (mealsData) => {
-            this.meals.set(mealsData);
-            
-            this.mealsApi.getErrorLogs().subscribe({
-              next: (errorsData) => {
-                this.errorLogs.set(errorsData);
-                this.isLoading.set(false);
-              },
-              error: (err) => {
-                console.error('Failed to load error logs:', err);
-                this.isLoading.set(false);
-              }
-            });
-          },
-          error: (err) => {
-            console.error('Failed to load meals list:', err);
-            this.isLoading.set(false);
-          }
-        });
+        checkFinish();
       },
       error: (err) => {
         console.error('Failed to load orders list:', err);
-        this.isLoading.set(false);
-      }
-    });
+        checkFinish();
+      },
+      complete: () => {}
+    };
+
+    const mealsObserver: Observer<any[]> = {
+      next: (mealsData) => {
+        this.meals.set(mealsData);
+        checkFinish();
+      },
+      error: (err) => {
+        console.error('Failed to load meals list:', err);
+        checkFinish();
+      },
+      complete: () => {}
+    };
+
+    const errorsObserver: Observer<any[]> = {
+      next: (errorsData) => {
+        this.errorLogs.set(errorsData);
+        checkFinish();
+      },
+      error: (err) => {
+        console.error('Failed to load error logs:', err);
+        checkFinish();
+      },
+      complete: () => {}
+    };
+
+    const usersObserver: Observer<any[]> = {
+      next: (usersData) => {
+        this.users.set(usersData);
+        checkFinish();
+      },
+      error: (err) => {
+        console.error('Failed to load users list:', err);
+        checkFinish();
+      },
+      complete: () => {}
+    };
+
+    this.mealsApi.getAllOrders().subscribe(ordersObserver);
+    this.mealsApi.getMeals().subscribe(mealsObserver);
+    this.mealsApi.getErrorLogs().subscribe(errorsObserver);
+    this.usersApi.getUsers().subscribe(usersObserver);
   }
 
   public onFileSelected(event: any) {
@@ -213,5 +249,39 @@ export class AdminComponent implements OnInit {
         }, 5000);
       }
     });
+  }
+
+  public updateUserRole(userId: string, newRole: string) {
+    const roleObserver: Observer<any> = {
+      next: (updatedUser) => {
+        this.feedbackMessage.set(`Successfully updated role for ${updatedUser.name} to ${updatedUser.role}`);
+        this.loadAllData();
+      },
+      error: (err) => {
+        console.error('Failed to update role:', err);
+        this.feedbackMessage.set('Failed to update role: ' + (err.error?.message || err.message));
+      },
+      complete: () => {}
+    };
+    this.usersApi.updateUserRole(userId, newRole).subscribe(roleObserver);
+  }
+
+  public deleteUser(userId: string, userName: string) {
+    if (!confirm(`Are you sure you want to delete user ${userName}?`)) {
+      return;
+    }
+    
+    const deleteObserver: Observer<any> = {
+      next: () => {
+        this.feedbackMessage.set(`Successfully deleted user ${userName}`);
+        this.loadAllData();
+      },
+      error: (err) => {
+        console.error('Failed to delete user:', err);
+        this.feedbackMessage.set('Failed to delete user: ' + (err.error?.message || err.message));
+      },
+      complete: () => {}
+    };
+    this.usersApi.deleteUser(userId).subscribe(deleteObserver);
   }
 }

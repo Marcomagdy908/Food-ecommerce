@@ -268,3 +268,63 @@ export async function adjustPoints(req: AuthenticatedRequest, res: Response): Pr
     res.status(500).json({ message: 'Failed to adjust points', error: error.message });
   }
 }
+
+export async function getAllUsers(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const users = await User.find({}).select('-passwordHash').sort({ name: 1 });
+    res.status(200).json(users);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Failed to retrieve users', error: error.message });
+  }
+}
+
+export async function updateUserRole(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    if (!role || !['user', 'admin'].includes(role)) {
+      res.status(400).json({ message: 'Invalid role value. Must be "user" or "admin".' });
+      return;
+    }
+
+    // Safety check: Prevent admin from de-escalating themselves
+    if (req.user && req.user.id === id && role === 'user') {
+      res.status(400).json({ message: 'You cannot remove your own admin status.' });
+      return;
+    }
+
+    const user = await User.findByIdAndUpdate(id, { role }, { new: true }).select('-passwordHash');
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Failed to update user role', error: error.message });
+  }
+}
+
+export async function deleteUser(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+
+    // Safety check: Prevent admin from deleting themselves
+    if (req.user && req.user.id === id) {
+      res.status(400).json({ message: 'You cannot delete your own account.' });
+      return;
+    }
+
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: 'Failed to delete user', error: error.message });
+  }
+}
+
