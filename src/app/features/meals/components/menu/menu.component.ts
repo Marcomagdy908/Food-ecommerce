@@ -1,8 +1,9 @@
 import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser, DecimalPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MealsApiService, MealItem } from '../../services/meals-api.service';
 import { CartStateService } from '../../../cart/services/cart-state.service';
+import { Observer, combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -15,6 +16,8 @@ export class MenuComponent implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly mealsApi = inject(MealsApiService);
   private readonly cart = inject(CartStateService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   public allMeals: MealItem[] = [];
   public filteredMeals: MealItem[] = [];
@@ -46,19 +49,49 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.mealsApi.getMeals().subscribe({
-        next: (data) => {
-          this.allMeals = data;
-          this.filterByCategory(this.activeCategory);
+      const menuDataObserver: Observer<[MealItem[], any]> = {
+        next: ([meals, params]) => {
+          this.allMeals = meals;
+          
+          const cat = params['category'];
+          const matchedCat = cat && this.categories.some(c => c.name.toLowerCase() === cat.toLowerCase())
+            ? (this.categories.find(c => c.name.toLowerCase() === cat.toLowerCase())?.name || 'Pizzas')
+            : 'Pizzas';
+          
+          this.activeCategory = matchedCat;
+          this.filteredMeals = this.allMeals.filter(m => m.category === this.activeCategory);
+
+          // Redirect dynamically if the query parameter is missing or invalid in the URL
+          if (!cat || !this.categories.some(c => c.name.toLowerCase() === cat.toLowerCase())) {
+            this.router.navigate([], {
+              relativeTo: this.route,
+              queryParams: { category: matchedCat },
+              queryParamsHandling: 'merge',
+              replaceUrl: true
+            });
+          }
         },
-        error: (err) => console.error('Failed to load meals in MenuComponent:', err)
-      });
+        error: (err) => console.error('Failed to load menu data:', err),
+        complete: () => {}
+      };
+
+      combineLatest([
+        this.mealsApi.getMeals(),
+        this.route.queryParams
+      ]).subscribe(menuDataObserver);
     }
   }
 
   public filterByCategory(category: string) {
     this.activeCategory = category;
     this.filteredMeals = this.allMeals.filter(m => m.category === category);
+    
+    // Update the query parameter in the URL programmatically
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { category: category },
+      queryParamsHandling: 'merge'
+    });
   }
 
   public addToCart(meal: MealItem) {
