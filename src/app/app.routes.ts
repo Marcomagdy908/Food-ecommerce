@@ -10,6 +10,7 @@ import { SignupComponent } from './features/auth/components/signup/signup.compon
 import { MealDetailComponent } from './features/meals/components/meal-detail/meal-detail.component';
 import { OrderTrackerComponent } from './features/orders/components/order-tracker/order-tracker.component';
 import { AdminComponent } from './features/admin/components/admin/admin.component';
+import { NotFoundComponent } from './features/not-found/components/not-found/not-found.component';
 
 const authGuard = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const authService = inject(AuthService);
@@ -30,6 +31,6 @@ export const routes: Routes = [
   { path: 'meals/:id', component: MealDetailComponent },
   { path: 'orders/:id/track', component: OrderTrackerComponent },
   { path: 'admin', component: AdminComponent },
-  { path: '**', redirectTo: '' }
+  { path: '**', component: NotFoundComponent }
 ];
 

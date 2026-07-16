@@ -110,17 +110,23 @@ export class PizzaCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
     container.appendChild(this.renderer.domElement);
 
     // Lighting rig for realism
-    const ambient = new THREE.AmbientLight(0xffeedd, 0.7);
+    const ambient = new THREE.AmbientLight(0xffeedd, 0.75);
     this.scene.add(ambient);
 
     const key = new THREE.DirectionalLight(0xfff5eb, 2.5);
-    key.position.set(4, 8, 5);
+    key.position.set(2, 4, 10);
     key.castShadow = true;
     key.shadow.mapSize.set(2048, 2048);
-    key.shadow.bias = -0.001;
+    key.shadow.camera.left = -5;
+    key.shadow.camera.right = 5;
+    key.shadow.camera.top = 5;
+    key.shadow.camera.bottom = -5;
+    key.shadow.camera.near = 0.5;
+    key.shadow.camera.far = 15;
+    key.shadow.bias = -0.0005;
     this.scene.add(key);
 
-    const fill = new THREE.DirectionalLight(0xff8844, 0.6);
+    const fill = new THREE.DirectionalLight(0xff8844, 0.65);
     fill.position.set(-5, -1, 2);
     this.scene.add(fill);
 
@@ -131,6 +137,14 @@ export class PizzaCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
     const top = new THREE.DirectionalLight(0xfff3e0, 1.0);
     top.position.set(0, 10, 0);
     this.scene.add(top);
+
+    // Static transparent shadow receiver plane behind the pizza to capture a drop shadow
+    const shadowPlaneGeo = new THREE.PlaneGeometry(30, 30);
+    const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.18 });
+    const shadowPlane = new THREE.Mesh(shadowPlaneGeo, shadowPlaneMat);
+    shadowPlane.position.set(0, 0, -1.6);
+    shadowPlane.receiveShadow = true;
+    this.scene.add(shadowPlane);
   }
 
   private loadModelAndSetup() {
