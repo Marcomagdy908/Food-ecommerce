@@ -2,10 +2,12 @@ import 'dotenv/config';
 import dns from 'dns';
 import mongoose from 'mongoose';
 
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch (e) {
-  // Ignore DNS override errors if in restricted environment
+if (process.platform === 'win32') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch (e) {
+    // Ignore DNS override errors if in restricted environment
+  }
 }
 
 const MONGODB_URI = process.env['MONGODB_URI'] || 'mongodb://127.0.0.1:27017/slicecraft';

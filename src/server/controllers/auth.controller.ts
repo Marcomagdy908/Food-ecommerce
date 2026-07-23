@@ -146,7 +146,7 @@ export async function getMe(req: AuthenticatedRequest, res: Response): Promise<v
       joinedDate: 'Joined ' + new Date(user.createdAt).toLocaleString('default', { month: 'short', year: 'numeric' })
     });
   } catch (error: any) {
-    res.status(500).json({ message: 'Failed to retrieve profile', error: error.message });
+    res.status(401).json({ message: 'Not authenticated', error: error.message });
   }
 }
 
