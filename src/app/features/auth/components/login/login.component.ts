@@ -2,11 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../../core/services/auth.service';
+import { PizzaWatermarkComponent } from '../pizza-watermark/pizza-watermark.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, PizzaWatermarkComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
