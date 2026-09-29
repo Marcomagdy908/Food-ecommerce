@@ -1,12 +1,12 @@
-# 🍕 Bella Napoli - Premium Artisanal Pizza Storefront
+# 🍕 Bella Napoli - Artisanal Pizza Storefront
 
-Bella Napoli is a premium, full-stack food e-commerce application featuring a modern, interactive storefront for artisanal pizza ordering, a live delivery tracker with real-time map simulation, and an administrator dashboard.
+Bella Napoli is a full-stack food e-commerce application featuring a modern, interactive storefront for artisanal pizza ordering, a live delivery tracker with real-time map simulation, and an administrator dashboard.
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Frontend**: Angular 21, Signals, SSR (Server-Side Rendering), Leaflet.js Maps, Vanilla CSS (rich custom themes)
+- **Frontend**: Angular 21, Signals, SSR (Server-Side Rendering), Vanilla CSS (rich custom themes)
 - **Backend**: Node.js, Express.js (Modular Controllers and API Routes)
 - **Database**: MongoDB via Mongoose (Schemas for Users, Meals, Orders, and Error Logs)
 - **Security**: JWT-based session authentication set via secure HTTP-Only cookies
@@ -29,10 +29,16 @@ Bella Napoli is a premium, full-stack food e-commerce application featuring a mo
 ### 📋 Prerequisites
 
 Ensure you have the following installed:
-- [Node.js](https://nodejs.org/) (v18 or higher)
+- [Node.js](https://nodejs.org/) (22.12 or higher)
 - [MongoDB](https://www.mongodb.com/) (running locally or access to a MongoDB Atlas cluster)
 
 ### 🔧 Installation & Setup
+
+```bash
+git clone https://github.com/Marcomagdy908/Food-ecommerce.git
+cd Food-ecommerce
+```
+
 
 1. **Install Dependencies**:
    ```bash
@@ -52,13 +58,43 @@ Ensure you have the following installed:
    ```bash
    npm run dev
    ```
-   Open your browser and navigate to **`http://localhost:4200/`**. The dev server proxies API calls to the Express server running behind the scenes.
+   Open **http://localhost:4200**. The checked-in proxy forwards `/api` requests to an Express server on port **4000**; run the backend separately rather than assuming `npm run dev` starts it.
+
+In another terminal, build and start the application server:
+
+```bash
+npm run build
+npm start
+```
+
+The server serves Angular SSR and `/api/v1` routes. Its default port is **4000**; ensure a root `.env` sets `PORT=4000` if copied from `.env.example`, whose example port differs from the proxy. Restart the server after rebuilding backend changes.
+
+For full application use without the frontend development server, open **http://localhost:4000**.
 
 ---
 
 ## 📜 Available Scripts
 
-- **`npm run dev` / `npm start`**: Runs the Angular development server.
+- **`npm run dev`**: Runs the Angular development frontend.
+- **`npm start`**: Runs the compiled application server after `npm run build`.
 - **`npm run build`**: Compiles the client browser and server SSR bundles into the `dist/` directory.
 - **`npm run db:seed`**: Clears and seeds the MongoDB database with initial sample data.
 - **`npm run test`**: Runs unit tests using the configured test runner.
+
+
+## 🗂️ Project map
+
+| Path | Purpose |
+| --- | --- |
+| `src/app/features/` | Storefront, account, orders, and administrator UI |
+| `src/server.ts` | Express API and Angular SSR entry point |
+| `src/server/controllers/` | Request handlers |
+| `src/server/models/` | Mongoose schemas |
+| `src/server/routes/` | API endpoints |
+
+The seed script clears and repopulates demo data; use a disposable development database.
+
+
+---
+
+[Marco Magdy](https://github.com/Marcomagdy908) · [More projects](https://github.com/Marcomagdy908?tab=repositories)
